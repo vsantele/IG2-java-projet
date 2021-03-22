@@ -1,0 +1,48 @@
+@startuml
+  entity Activité {
+    id
+    --
+    titre
+    combine
+    image_id
+  }
+
+  entity Séance {
+    id
+    --
+    num_jour
+    heure_début
+    heure_fin
+    date_personalisée: bool
+    nb_max
+  }
+
+  entity Réservation {
+    id
+    --
+    utilisateur_id
+    seance_id
+    date
+  }
+
+  entity Date {
+    id
+    --
+    type : ["annule", "personalisée"]
+    date
+
+  }
+
+  entity Association {
+    id
+    --
+    nom
+    address
+    contact
+  }
+
+  Activité ||..o{ Séance
+  Séance ||..o{ Réservation
+  Séance ||..o{ Date
+  Association ||..o{ Réservation
+@enduml
