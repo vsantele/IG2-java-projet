@@ -1,4 +1,4 @@
-@startuml
+@startuml database
   entity Activité {
     id
     --
@@ -37,7 +37,7 @@
     id
     --
     nom
-    address
+    adresse
     contact
   }
 
