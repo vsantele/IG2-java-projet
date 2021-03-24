@@ -1,48 +1,53 @@
 @startuml database
-  entity Activité {
-    id
+  entity Activity {
+    * id
     --
-    titre
-    combine
-    image_id
+    * title
+    * image_id
   }
 
-  entity Séance {
-    id
+  entity Seance {
+    * id
     --
-    num_jour
-    heure_début
-    heure_fin
-    date_personalisée: bool
+    * num_day
+    * start_hour
+    * end_hour
+    * custom_date: bool
     nb_max
   }
 
-  entity Réservation {
-    id
+  entity Booking {
+    * id
     --
-    utilisateur_id
-    seance_id
-    date
+    * lastname
+    * firstname
+    * amount
+    * paid
+    * phone
+    * birthdate
+    email
+    * date
   }
 
   entity Date {
-    id
+    * id
     --
-    type : ["annule", "personalisée"]
-    date
-
+    * type : ["cancel", "custom"]
+    * date
   }
 
-  entity Association {
-    id
+  entity Charity {
+    * id
     --
-    nom
-    adresse
-    contact
+    * name
+    * contact
+    address
+    city
+    country
   }
 
-  Activité ||..o{ Séance
-  Séance ||..o{ Réservation
-  Séance ||..o{ Date
-  Association ||..o{ Réservation
+  Activity ||..o{ Seance
+  Seance ||..o{ Booking
+  Seance ||..o{ Date
+  Charity ||..o{ Booking
 @enduml
