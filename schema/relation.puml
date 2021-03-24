@@ -14,6 +14,7 @@
     * end_hour
     * isWeekly: bool
     nb_max
+    * activity_id
   }
 
   entity Booking {
@@ -27,6 +28,8 @@
     * birthdate
     email
     * date
+    * charity_id
+    * session_id
   }
 
   entity Date {
@@ -34,6 +37,7 @@
     --
     * type : ["canceled", "custom"]
     * date
+    * session_id
   }
 
   entity Charity {
@@ -47,8 +51,9 @@
     country
   }
 
-  Activity ||..o{ Seance
-  Session ||..o{ Booking
-  Session ||..o{ Date
-  Charity ||..o{ Booking
+
+  Activity::id <-up- Session::activity_id
+  Session::id <-right- Booking::session_id
+  Session::id <-right- Date::session_id
+  Charity::id <-up- Booking::charity_id
 @enduml
