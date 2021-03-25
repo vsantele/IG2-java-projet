@@ -1,9 +1,8 @@
 @startuml database
   entity Activity {
-    * id
+    * code
     --
-    * title
-    * image_id
+    * label
   }
 
   entity Session {
@@ -37,9 +36,8 @@
   }
 
   entity Charity {
-    * id
-    --
     * name
+    --
     * contact
     address
     city
@@ -47,7 +45,7 @@
     country
   }
 
-  Activity ||..o{ Seance
+  Activity ||..o{ Session
   Session ||..o{ Booking
   Session ||..o{ Date
   Charity ||..o{ Booking

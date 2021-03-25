@@ -1,9 +1,8 @@
 @startuml database
   entity Activity {
-    * id
+    * code
     --
-    * title
-    * image_id
+    * label
   }
 
   entity Session {
@@ -41,9 +40,8 @@
   }
 
   entity Charity {
-    * id
-    --
     * name
+    --
     * contact
     address
     city
@@ -52,8 +50,8 @@
   }
 
 
-  Activity::id <-up- Session::activity_id
+  Activity::code <-up- Session::activity_id
   Session::id <-right- Booking::session_id
   Session::id <-right- Date::session_id
-  Charity::id <-up- Booking::charity_id
+  Charity::name <-up- Booking::charity_id
 @enduml
