@@ -11,7 +11,7 @@
     * num_day
     * start_hour
     * end_hour
-    * isWeekly: bool
+    * is_weekly: bool
     nb_max
   }
 
