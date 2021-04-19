@@ -15,7 +15,7 @@ hide circle
     * end_hour
     * is_weekly: bool
     nb_max
-    * activity_id
+    * activity_code
   }
 
   entity Booking {
@@ -29,7 +29,7 @@ hide circle
     * birthdate
     email
     * date
-    * charity_id
+    * charity_code
     * session_id
   }
 
