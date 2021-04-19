@@ -1,4 +1,6 @@
-@startuml database
+@startuml relation
+hide circle
+
   entity Activity {
     * code
     --
@@ -40,8 +42,9 @@
   }
 
   entity Charity {
-    * name
+    * code
     --
+    * name
     * contact
     address
     city
@@ -53,5 +56,5 @@
   Activity::code <-up- Session::activity_id
   Session::id <-right- Booking::session_id
   Session::id <-right- Date::session_id
-  Charity::name <-up- Booking::charity_id
+  Charity::code <-up- Booking::charity_id
 @enduml

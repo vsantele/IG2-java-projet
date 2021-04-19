@@ -1,4 +1,5 @@
 @startuml database
+hide circle
   entity Activity {
     * code
     --
@@ -36,8 +37,9 @@
   }
 
   entity Charity {
-    * name
+    * code
     --
+    * name
     * contact
     address
     city
