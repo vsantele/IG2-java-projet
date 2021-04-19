@@ -8,7 +8,11 @@ public class Activity {
     this.code = code;
     this.label = label;
   }
-  
+
+  public String getCode() {
+    return code;
+  }
+
   @Override
   public String toString() {
     return "Activity{" +
