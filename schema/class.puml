@@ -1,0 +1,25 @@
+@startuml class
+class Activity {
+
+}
+
+class Booking {
+
+}
+
+class Charity {
+
+}
+
+class Date {
+
+}
+
+class Session {
+
+}
+
+class DateGenerator {
+
+}
+@enduml
