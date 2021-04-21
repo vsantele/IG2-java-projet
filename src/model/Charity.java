@@ -18,7 +18,35 @@ public class Charity {
     this.zipCode = zipCode;
     this.country = country;
   }
-  
+
+  public String getCode() {
+    return code;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public String getContact() {
+    return contact;
+  }
+
+  public String getAddress() {
+    return address;
+  }
+
+  public String getCity() {
+    return city;
+  }
+
+  public String getZipCode() {
+    return zipCode;
+  }
+
+  public String getCountry() {
+    return country;
+  }
+
   @Override
   public String toString() {
     return "Charity{" +
