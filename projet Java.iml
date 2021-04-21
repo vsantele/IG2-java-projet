@@ -10,7 +10,16 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://F:/mysql-connector-java-8.0.23/mysql-connector-java-8.0.23.jar!/" />
+          <root url="jar://$MODULE_DIR$/jar/mysql-connector-java-8.0.24.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/jar/sqlite-jdbc-3.34.0.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
