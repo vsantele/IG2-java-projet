@@ -1,3 +1,9 @@
+DROP TABLE IF EXISTS activity;
+DROP TABLE IF EXISTS session;
+DROP TABLE IF EXISTS charity;
+DROP TABLE IF EXISTS booking;
+DROP TABLE IF EXISTS date;
+
 CREATE TABLE activity
 (
     activity_code VARCHAR(8),
@@ -32,7 +38,6 @@ CREATE TABLE charity
 CREATE TABLE booking
 (
     booking_id INTEGER,
-        CONSTRAINT booking_id_pk PRIMARY KEY,
     last_name VARCHAR(30) NOT NULL,
     first_name VARCHAR(30) NOT NULL,
     amount DOUBLE NOT NULL,
@@ -42,17 +47,18 @@ CREATE TABLE booking
     email VARCHAR(20),
     date DATE NOT NULL,
     charity_code VARCHAR(8) NOT NULL,
-        CONSTRAINT charity_code_fk FOREIGN KEY (charity_code) REFERENCES charity,
     session_id INTEGER NOT NULL,
-        CONSTRAINT session_id_fk FOREIGN KEY (session_id) REFERENCES session
+    PRIMARY KEY (booking_id),
+    CONSTRAINT charity_code_fk FOREIGN KEY (charity_code) REFERENCES charity(charity_code),
+    CONSTRAINT session_id_fk FOREIGN KEY (session_id) REFERENCES session(session_id)
 );
 
 CREATE TABLE date
 (
     date_id INTEGER,
-        CONSTRAINT date_id_pk PRIMARY KEY,
     type VARCHAR(10) NOT NULL,
     date DATE NOT NULL,
     session_id INTEGER NOT NULL,
-        CONSTRAINT session_id_fk FOREIGN KEY (session_id) REFERENCES session
+    PRIMARY KEY (date_id),
+    CONSTRAINT session_id_fk FOREIGN KEY (session_id) REFERENCES session(session_id)
 );

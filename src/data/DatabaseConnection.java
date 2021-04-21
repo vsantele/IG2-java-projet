@@ -6,7 +6,7 @@ import java.sql.*;
 
 public class DatabaseConnection {
   static private Connection dbConnection;
-  
+
   private DatabaseConnection() {
   
   }
@@ -23,4 +23,5 @@ public class DatabaseConnection {
     }
     return dbConnection;
   }
+
 }
