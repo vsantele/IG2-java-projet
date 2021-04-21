@@ -1,15 +1,13 @@
-package data;
+package data.connection;
 
 import util.DatabaseInformation;
 
 import java.sql.*;
 
-public class DatabaseConnection {
+public class MysqlConnection implements DBConnection {
   static private Connection dbConnection;
 
-  private DatabaseConnection() {
-  
-  }
+  private MysqlConnection() {}
   
   static public Connection getInstance() {
     if (dbConnection == null) {
@@ -17,8 +15,7 @@ public class DatabaseConnection {
         dbConnection = DriverManager.getConnection(DatabaseInformation.getUrl(), DatabaseInformation.getUser(), DatabaseInformation.getPassword());
         
       } catch (SQLException exception) {
-        System.err.println(exception.getMessage());
-        
+        exception.printStackTrace();
       }
     }
     return dbConnection;
