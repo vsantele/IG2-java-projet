@@ -10,7 +10,7 @@ CREATE TABLE activity
 DROP TABLE IF EXISTS session;
 CREATE TABLE session
 (
-    session_id INTEGER,
+    session_id INTEGER AUTO_INCREMENT,
     num_day TINYINT NOT NULL,
     start_hour TIME NOT NULL,
     end_hour TIME NOT NULL,
@@ -37,7 +37,7 @@ CREATE TABLE charity
 DROP TABLE IF EXISTS booking;
 CREATE TABLE booking
 (
-    booking_id INTEGER,
+    booking_id INTEGER AUTO_INCREMENT,
     last_name VARCHAR(30) NOT NULL,
     first_name VARCHAR(30) NOT NULL,
     amount DOUBLE NOT NULL,
@@ -56,7 +56,7 @@ CREATE TABLE booking
 DROP TABLE IF EXISTS date;
 CREATE TABLE date
 (
-    date_id INTEGER,
+    date_id INTEGER AUTO_INCREMENT,
     type VARCHAR(10) NOT NULL,
     date DATE NOT NULL,
     session_id INTEGER NOT NULL,
