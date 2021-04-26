@@ -29,6 +29,50 @@ public class Booking {
     this.session = session;
   }
   
+  public Integer getId() {
+    return id;
+  }
+  
+  public String getLastname() {
+    return lastname;
+  }
+  
+  public String getFirstname() {
+    return firstname;
+  }
+  
+  public Double getAmount() {
+    return amount;
+  }
+  
+  public Boolean getPaid() {
+    return isPaid;
+  }
+  
+  public String getPhone() {
+    return phone;
+  }
+  
+  public LocalDate getBirthdate() {
+    return birthdate;
+  }
+  
+  public String getEmail() {
+    return email;
+  }
+  
+  public LocalDate getDate() {
+    return date;
+  }
+  
+  public Charity getCharity() {
+    return charity;
+  }
+  
+  public Session getSession() {
+    return session;
+  }
+  
   @Override
   public String toString() {
     return "Booking{" +

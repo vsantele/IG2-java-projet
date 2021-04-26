@@ -4,10 +4,10 @@ import util.DatabaseInformation;
 
 import java.sql.*;
 
-public class MysqlConnection implements DBConnection {
+public class MariadbConnection implements DBConnection {
   static private Connection dbConnection;
 
-  private MysqlConnection() {}
+  private MariadbConnection() {}
   
   static public Connection getInstance() {
     if (dbConnection == null) {

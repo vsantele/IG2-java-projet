@@ -11,6 +11,10 @@ public class Session {
   private Integer nbMax;
   private Activity activity;
   
+  public Session(Integer id) {
+    this.id = id;
+  }
+  
   public Session(Integer id, Integer numDay, LocalTime startHour, LocalTime endHour, Boolean isWeekly, Integer nbMax, Activity activity) {
     this.id = id;
     this.numDay = numDay;
@@ -19,6 +23,10 @@ public class Session {
     this.isWeekly = isWeekly;
     this.nbMax = nbMax;
     this.activity = activity;
+  }
+  
+  public Integer getId() {
+    return id;
   }
   
   @Override

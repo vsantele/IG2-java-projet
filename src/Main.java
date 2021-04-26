@@ -1,18 +1,15 @@
 import data.access.*;
-import model.Charity;
+import model.*;
 
-import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class Main {
   public static void main(String[] args) {
       BookingDataAccess dao = new BookingDBAccess();
-    try {
-      Charity charity = new Charity("avmp", "À Vos Marques Prêts", "contact@avmp.be","5, Rue des platanes", "Mouscron", "7700", "Belgique");
-      int nb = dao.addCharity(charity);
-      System.out.println(nb);
-    } catch (SQLException throwables) {
-      throwables.printStackTrace();
-    }
-
+      Session ses = new Session(5);
+      ArrayList<Date> arr = dao.getDates(ses);
+      for(Date date : arr) {
+        System.out.println(date);
+      }
   }
 }

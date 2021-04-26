@@ -15,6 +15,10 @@ public class Date {
     this.session = session;
   }
   
+  public Date(Integer id, String type, LocalDate date) {
+    this(id, type, date, null);
+  }
+  
   @Override
   public String toString() {
     return "Date{" +
