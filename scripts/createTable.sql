@@ -3,7 +3,7 @@ DROP TABLE IF EXISTS activity;
 CREATE TABLE activity
 (
     activity_code VARCHAR(8),
-    title VARCHAR(20) NOT NULL,
+    title VARCHAR(64) NOT NULL,
     CONSTRAINT activity_pk PRIMARY KEY (activity_code)
 );
 
@@ -18,18 +18,20 @@ CREATE TABLE session
     nb_max INTEGER,
     activity_code VARCHAR(8) NOT NULL,
     CONSTRAINT session_pk PRIMARY KEY (session_id),
-    CONSTRAINT session_activity_fk FOREIGN KEY (activity_code) REFERENCES activity(activity_code)
+    CONSTRAINT session_activity_fk FOREIGN KEY (activity_code) REFERENCES activity(activity_code),
+    CONSTRAINT session_num_day_ck CHECK (num_day BETWEEN 1 AND 7),
+    CONSTRAINT session_hour_ck CHECK (start_hour < end_hour)
 );
 
 DROP TABLE IF EXISTS charity;
 CREATE TABLE charity
 (
     charity_code VARCHAR(8),
-    name VARCHAR(20) NOT NULL,
-    contact VARCHAR(20) NOT NULL,
-    address VARCHAR(20),
-    city VARCHAR(20),
-    country VARCHAR(20),
+    name VARCHAR(64) NOT NULL,
+    contact VARCHAR(64) NOT NULL,
+    address VARCHAR(64),
+    city VARCHAR(64),
+    country VARCHAR(64),
     zip_code VARCHAR(10),
    CONSTRAINT charity_pk PRIMARY KEY (charity_code)
 );
@@ -44,7 +46,7 @@ CREATE TABLE booking
     is_paid BOOLEAN NOT NULL,
     phone VARCHAR(20) NOT NULL,
     birth_date DATE,
-    email VARCHAR(20),
+    email VARCHAR(64),
     date DATE NOT NULL,
     charity_code VARCHAR(8) NOT NULL,
     session_id INTEGER NOT NULL,
@@ -61,5 +63,6 @@ CREATE TABLE date
     date DATE NOT NULL,
     session_id INTEGER NOT NULL,
     CONSTRAINT date_pk PRIMARY KEY (date_id),
-    CONSTRAINT date_session_fk FOREIGN KEY (session_id) REFERENCES session(session_id)
+    CONSTRAINT date_session_fk FOREIGN KEY (session_id) REFERENCES session(session_id),
+    CONSTRAINT date_type_ck CHECK (type = 'canceled' || type = 'custom')
 );
