@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="booking@localhost" uuid="e37e8720-1a62-4c86-a6c0-cf88038669e7">
-      <driver-ref>mysql.8</driver-ref>
+    <data-source source="LOCAL" name="ig2_java@2001:41d0:404:200::5960" uuid="c8d6f423-9ed8-4061-8778-987bd4a247f5">
+      <driver-ref>mariadb</driver-ref>
       <synchronize>true</synchronize>
-      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://localhost:3306/booking</jdbc-url>
+      <jdbc-driver>org.mariadb.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mariadb://address=(protocol=tcp)(host=2001:41d0:404:200::5960)(port=3306)/ig2_java</jdbc-url>
+      <vm-options>-Djava.net.preferIPv6Addresses=true</vm-options>
       <working-dir>$ProjectFileDir$</working-dir>
-      <driver-properties>
-        <property name="serverTimezone" value="UTC" />
-      </driver-properties>
     </data-source>
   </component>
 </project>
