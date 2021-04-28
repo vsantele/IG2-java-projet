@@ -19,6 +19,10 @@ public class Date {
     this(id, type, date, null);
   }
   
+  public Date(String type, LocalDate date,model.Session session) {
+    this(null, type, date, session);
+  }
+  
   @Override
   public String toString() {
     return "Date{" +
