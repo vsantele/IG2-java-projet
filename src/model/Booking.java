@@ -13,7 +13,9 @@ public class Booking {
   private String email;
   private LocalDate date;
   private Charity charity;
+  private String charityCode;
   private Session session;
+  private Integer sessionId;
 
   public Booking(Integer id, String lastname, String firstname, Double amount, Boolean isPaid, String phone, LocalDate birthdate, String email, LocalDate date, Charity charity, Session session) {
     setId(id);
@@ -27,6 +29,12 @@ public class Booking {
     this.date = date;
     this.charity = charity;
     this.session = session;
+  }
+  
+  public Booking(Integer id, String lastname, String firstname, Double amount, Boolean isPaid, String phone, LocalDate birthdate, String email, LocalDate date, String charityCode, Integer sessionId) {
+    this(id, lastname, firstname, amount, isPaid, phone, birthdate, email, date, (Charity) null,  (Session) null);
+    this.charityCode = charityCode;
+    this.sessionId = sessionId;
   }
 
   public Booking(String lastname, String firstname, Double amount, Boolean isPaid, String phone, LocalDate birthdate, String email, LocalDate date, Charity charity, Session session) {
@@ -77,8 +85,24 @@ public class Booking {
     return charity;
   }
   
+  public String getCharityCode() {
+    if (charity == null) {
+      return charityCode;
+    } else {
+      return charity.getCode();
+    }
+  }
+  
   public Session getSession() {
     return session;
+  }
+  
+  public Integer getSessionId() {
+    if (session == null) {
+      return sessionId;
+    } else {
+      return session.getId();
+    }
   }
   
   @Override
