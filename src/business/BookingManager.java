@@ -1,7 +1,9 @@
 package business;
 
 import data.access.*;
-import exception.*;
+import exception.data.AddBookingException;
+import exception.data.DeleteBookingException;
+import exception.data.UpdateBookingException;
 import model.*;
 
 public class BookingManager {
@@ -15,11 +17,17 @@ public class BookingManager {
     this.dao = dao;
   }
   
-  public int addBooking(Booking booking) throws AddBookingException {
-    return dao.addBooking(booking);
+  public Booking addBooking(Booking booking) throws AddBookingException {
+    int index = dao.addBooking(booking);
+    booking.setId(index);
+    return booking;
   }
   
   public int updateBooking(Booking booking) throws UpdateBookingException {
     return dao.updateBooking(booking);
+  }
+  
+  public int deleteBooking(Booking booking) throws DeleteBookingException {
+    return dao.deleteBooking(booking);
   }
 }

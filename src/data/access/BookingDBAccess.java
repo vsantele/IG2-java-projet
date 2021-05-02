@@ -1,7 +1,7 @@
 package data.access;
 
 import data.connection.MariadbConnection;
-import exception.*;
+import exception.data.*;
 import model.*;
 import model.Date;
 import util.Utils;
@@ -17,7 +17,7 @@ public class BookingDBAccess implements BookingDataAccess {
     Connection connection = MariadbConnection.getInstance();
     String sql = "INSERT INTO booking(last_name, first_name, amount, is_paid, phone, birth_date, email, date, charity_code, session_id) VALUES (?,?,?,?,?,?,?,?,?,?);";
     try {
-      PreparedStatement req = connection.prepareStatement(sql);
+      PreparedStatement req = connection.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
       
       req.setString(1, booking.getLastname());
       req.setString(2, booking.getFirstname());
@@ -40,9 +40,21 @@ public class BookingDBAccess implements BookingDataAccess {
       req.setString(9, booking.getCharity().getCode());
       req.setInt(10, booking.getSession().getId());
       
-      return req.executeUpdate();
+      int affectedRows = req.executeUpdate();
+
+      if (affectedRows == 0) {
+        throw new AddBookingException("Aucune ligne n'a été ajoutée");
+      }
+
+      ResultSet generatedKeys = req.getGeneratedKeys();
+      if (generatedKeys.next()) {
+        return generatedKeys.getInt(1);
+      } else {
+        throw new AddBookingException("Erreur lors de la récupération de l'id");
+      }
+
     } catch (SQLException exception) {
-      throw new AddBookingException(exception.getErrorCode());
+      throw new AddBookingException(exception.getMessage());
     }
   }
   
@@ -76,7 +88,22 @@ public class BookingDBAccess implements BookingDataAccess {
       req.setInt(11, booking.getId());
       return req.executeUpdate();
     } catch (SQLException exception) {
-      throw new UpdateBookingException(exception.getErrorCode());
+      throw new UpdateBookingException(exception.getMessage());
+    }
+  }
+  
+  public int deleteBooking(Booking booking) throws DeleteBookingException {
+    Connection connection = MariadbConnection.getInstance();
+    String sql = "DELETE FROM booking WHERE booking_id = ?";
+  
+    try {
+      PreparedStatement req = connection.prepareStatement(sql);
+      req.setInt(1, booking.getId());
+      
+      return req.executeUpdate();
+    } catch (SQLException e) {
+      e.printStackTrace();
+      throw new DeleteBookingException(e.getMessage());
     }
   }
   
@@ -92,10 +119,6 @@ public class BookingDBAccess implements BookingDataAccess {
       
       ResultSet data = req.executeQuery();
       ResultSetMetaData meta = data.getMetaData();
-      int nbColumns = meta.getColumnCount();
-      for(int i = 1; i <= nbColumns; i++) {
-        System.out.println(meta.getColumnName(i) + ": " + meta.getColumnType(i));
-      }
       while (data.next()) {
         Integer id = data.getInt("date_id");
         String type = data.getString("type");

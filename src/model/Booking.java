@@ -14,9 +14,9 @@ public class Booking {
   private LocalDate date;
   private Charity charity;
   private Session session;
-  
+
   public Booking(Integer id, String lastname, String firstname, Double amount, Boolean isPaid, String phone, LocalDate birthdate, String email, LocalDate date, Charity charity, Session session) {
-    this.id = id;
+    setId(id);
     this.lastname = lastname;
     this.firstname = firstname;
     this.amount = amount;
@@ -27,6 +27,14 @@ public class Booking {
     this.date = date;
     this.charity = charity;
     this.session = session;
+  }
+
+  public Booking(String lastname, String firstname, Double amount, Boolean isPaid, String phone, LocalDate birthdate, String email, LocalDate date, Charity charity, Session session) {
+    this(null, lastname, firstname, amount, isPaid, phone, birthdate, email, date, charity, session);
+  }
+  
+  public void setId(Integer id) {
+    this.id = id;
   }
   
   public Integer getId() {
