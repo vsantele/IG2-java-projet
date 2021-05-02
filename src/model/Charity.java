@@ -19,6 +19,10 @@ public class Charity {
     this.country = country;
   }
 
+  public  Charity(String code) {
+    this.code = code;
+  }
+
   public String getCode() {
     return code;
   }
