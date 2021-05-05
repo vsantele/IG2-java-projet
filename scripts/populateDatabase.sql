@@ -21,4 +21,10 @@ INSERT INTO date(type, date, session_id) VALUES ('custom', '2021-05-08', 5);
 INSERT INTO date(type, date, session_id) VALUES ('custom', '2021-05-15', 5);
 INSERT INTO date(type, date, session_id) VALUES ('canceled', '2021-05-06', 2);
 
+-- Booking
+INSERT INTO booking(lastname, firstname, amount, is_paid, phone, birthdate, email, date, charity_code, session_id) VALUES ('Santelé', 'Victor', 10.0, true, '+32 491/08.62.53', '2000-03-16', 'victor.santele@gmail.com','2021-05-08', 'AVMP', 5);
+INSERT INTO booking(lastname, firstname, amount, is_paid, phone, birthdate, email, date, charity_code, session_id) VALUES ('Depauw', 'Loïc', 42.0, false, '+32 471 22 05 79', '2000-10-27', 'lolodpw@gmail.com','2021-05-15', 'AVMP', 5);
+INSERT INTO booking(lastname, firstname, amount, is_paid, phone, birthdate, email, date, charity_code, session_id) VALUES ('Depauw', 'Loïc', 0.1, true, '+32 471 22 05 79', '2000-10-27', 'lolodpw@gmail.com','2021-05-10', 'CHAR1', 3);
+
+
 

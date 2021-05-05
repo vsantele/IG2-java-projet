@@ -20,7 +20,7 @@ public class BookingDBAccess implements BookingDataAccess {
   }
   
   public int addBooking(Booking booking) throws AddBookingException {
-    String sql = "INSERT INTO booking(last_name, first_name, amount, is_paid, phone, birth_date, email, date, charity_code, session_id) " +
+    String sql = "INSERT INTO booking(lastname, firstname, amount, is_paid, phone, birthdate, email, date, charity_code, session_id) " +
             "VALUES (?,?,?,?,?,?,?,?,?,?);";
     try {
       PreparedStatement req = connection.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
@@ -65,7 +65,7 @@ public class BookingDBAccess implements BookingDataAccess {
   }
   
   public int updateBooking(Booking booking) throws UpdateBookingException {
-    String sql = "UPDATE booking set last_name = ?, first_name = ?, amount = ?, is_paid = ?, phone = ?, birth_date = ?, email = ?, date = ?, charity_code = ?, session_id = ?" +
+    String sql = "UPDATE booking set lastname = ?, firstname = ?, amount = ?, is_paid = ?, phone = ?, birthdate = ?, email = ?, date = ?, charity_code = ?, session_id = ?" +
             "WHERE booking_id = ?;";
     try {
       PreparedStatement req = connection.prepareStatement(sql);
@@ -227,7 +227,7 @@ public class BookingDBAccess implements BookingDataAccess {
   
   public ArrayList<Booking> getBookings() throws GetBookingsException {
     ArrayList<Booking> bookings = new ArrayList<>();
-    String sql = "SELECT booking_id, last_name, first_name, amount, is_paid, phone, birth_date, email, date, charity_code, session_id FROM booking;";
+    String sql = "SELECT booking_id, lastname, firstname, amount, is_paid, phone, birthdate, email, date, charity_code, session_id FROM booking;";
   
     try {
       PreparedStatement req = connection.prepareStatement(sql);
@@ -263,7 +263,7 @@ public class BookingDBAccess implements BookingDataAccess {
   
   public ArrayList<Booking> getBookings(Session session, LocalDate date) throws GetBookingsException {
     ArrayList<Booking> bookings = new ArrayList<>();
-    String sql = "SELECT booking_id, last_name, first_name, amount, is_paid, phone, birth_date, email, charity_code " +
+    String sql = "SELECT booking_id, lastname, firstname, amount, is_paid, phone, birthdate, email, charity_code " +
             "FROM booking " +
             "WHERE session_id = ? AND date = ?;";
   
@@ -305,8 +305,7 @@ public class BookingDBAccess implements BookingDataAccess {
             "FROM booking b " +
             "JOIN session s ON b.session_id = s.session_id " +
             "JOIN activity a ON s.activity_code = a.activity_code " +
-            "WHERE b.charity_code = ? " +
-            "GROUP BY a.title;";
+            "WHERE b.charity_code = ?;";
     
     try {
       PreparedStatement req = connection.prepareStatement(sql);
@@ -321,6 +320,38 @@ public class BookingDBAccess implements BookingDataAccess {
   
   @Override
   public void getPeoplePerActivityAndCharity(Activity activity, Charity charity) throws GetPeoplePerActivityAndCharityException {
+    String sql = "SELECT b.firstname, b.lastname, b.birthdate, b.amount " +
+            "FROM booking b " +
+            "JOIN session s ON b.session_id = s.session_id " +
+            "JOIN charity c ON b.charity_code = c.charity_code " +
+            "WHERE s.activity_code = ? AND c.charity_code = ?";
+    
+    try {
+      PreparedStatement req = connection.prepareStatement(sql);
+      
+      req.setString(1,activity.getCode());
+      req.setString(2,charity.getCode());
+      
+      ResultSet data = req.executeQuery();
+    } catch (SQLException e) {
+      e.printStackTrace();
+      throw new GetPeoplePerActivityAndCharityException(e.getMessage());
+    }
+  }
   
+  public void getCharityAtHour(LocalTime time) throws GetCharityAtHourException {
+    String sql = "SELECT c.name FROM charity c " +
+            "JOIN booking b ON c.charity_code = b.charity_code " +
+            "JOIN session s ON b.session_id = s.session_id " +
+            "WHERE ? BETWEEN s.start_hour AND s.end_hour " +
+            "GROUP BY c.name;";
+    
+    try {
+      PreparedStatement req = connection.prepareStatement(sql);
+      
+    } catch (SQLException e) {
+      e.printStackTrace();
+      throw new GetCharityAtHourException(e.getMessage());
+    }
   }
 }

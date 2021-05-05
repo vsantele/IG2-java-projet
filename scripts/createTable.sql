@@ -40,12 +40,12 @@ DROP TABLE IF EXISTS booking;
 CREATE TABLE booking
 (
     booking_id INTEGER AUTO_INCREMENT,
-    last_name VARCHAR(30) NOT NULL,
-    first_name VARCHAR(30) NOT NULL,
+    lastname VARCHAR(30) NOT NULL,
+    firstname VARCHAR(30) NOT NULL,
     amount DOUBLE NOT NULL,
     is_paid BOOLEAN NOT NULL,
     phone VARCHAR(20) NOT NULL,
-    birth_date DATE,
+    birthdate DATE,
     email VARCHAR(64),
     date DATE NOT NULL,
     charity_code VARCHAR(8) NOT NULL,
