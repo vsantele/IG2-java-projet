@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="MariaDB - ig2_java@vsantele.dev" uuid="c8d6f423-9ed8-4061-8778-987bd4a247f5">
+    <data-source source="LOCAL" name="ig2_java@2001:41d0:404:200::5960" uuid="c8d6f423-9ed8-4061-8778-987bd4a247f5">
       <driver-ref>mariadb</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.mariadb.jdbc.Driver</jdbc-driver>
       <jdbc-url>jdbc:mariadb://address=(protocol=tcp)(host=vsantele.dev)(port=3306)/ig2_java</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
+    <data-source source="LOCAL" name="@localhost" uuid="1991fc2b-2346-4db9-b14e-d89e10ce6c31">
+      <driver-ref>mariadb</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.mariadb.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mariadb://localhost:3306</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </component>
