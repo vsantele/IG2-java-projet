@@ -4,19 +4,17 @@ import data.access.*;
 import exception.data.GetDatesException;
 import model.*;
 import model.Date;
+import util.Utils;
 
 import java.time.*;
 import java.util.*;
-import java.util.stream.Stream;
 
 public class DateGenerator {
   static public ArrayList<LocalDate> getDates(Session session, LocalDate start, LocalDate end) throws GetDatesException {
-    System.out.println("Start: " + start);
-    System.out.println("End: " + end);
     BookingDataAccess dao = new BookingDBAccess();
     ArrayList<LocalDate> dates = new ArrayList<>();
   
-    ArrayList<Date> sessionDates = dao.getDates(session);
+    ArrayList<Date> sessionDates = dao.getDates(session, start, end);
     
     // TODO : Générer les dates si besoin + retirer les canceled si besoins
     if (session.getWeekly()) {
@@ -33,9 +31,9 @@ public class DateGenerator {
         calculatedDate = calculatedDate.plusDays(7);
       }
     } else {
-      sessionDates.stream().filter(date -> date.getType().equals("custom")).forEach(date -> dates.add(date.getDate()));
+      sessionDates.stream().filter(date -> date.getType().equals(Date.CUSTOM)).forEach(date -> dates.add(date.getDate()));
     }
-    dates.removeIf(date -> sessionDates.stream().filter(in -> in.getType().equals("canceled")).map(Date::getDate).anyMatch(in -> in.isEqual(date)));
+    dates.removeIf(date -> sessionDates.stream().filter(in -> in.getType().equals(Date.CANCELED)).map(Date::getDate).anyMatch(in -> in.isEqual(date)));
     
     return dates;
   }

@@ -4,6 +4,9 @@ import java.time.LocalDate;
 import java.time.OffsetDateTime;
 
 public class Date {
+  public static final String CUSTOM = "custom";
+  public static final String CANCELED = "canceled";
+
   private Integer id;
   private String type;
   private LocalDate date;

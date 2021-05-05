@@ -112,16 +112,19 @@ public class BookingDBAccess implements BookingDataAccess {
     }
   }
   
-  public ArrayList<Date> getDates(Session session) throws GetDatesException {
+  public ArrayList<Date> getDates(Session session, LocalDate start, LocalDate end) throws GetDatesException {
     ArrayList<Date> dates = new ArrayList<>();
     String sql = "SELECT date_id, date, type " +
             "FROM date " +
-            "WHERE session_id = ?";
+            "WHERE session_id = ?" +
+            "AND date BETWEEN ? and ?";
     
     try {
       PreparedStatement req = connection.prepareStatement(sql);
       
       req.setInt(1, session.getId());
+      req.setDate(2, Utils.toSqlDate(start));
+      req.setDate(3, Utils.toSqlDate(end));
       
       ResultSet data = req.executeQuery();
       ResultSetMetaData meta = data.getMetaData();
@@ -298,7 +301,7 @@ public class BookingDBAccess implements BookingDataAccess {
   }
   
   public void getAmountsPerActivity(Charity charity) throws GetAmountsPerActivityException {
-    String sql = "SELECT SUM(b.amount) as \"somme\", COUNT(*) as \"nombre\", a.title " +
+    String sql = "SELECT SUM(b.amount) as \"somme\", a.title " +
             "FROM booking b " +
             "JOIN session s ON b.session_id = s.session_id " +
             "JOIN activity a ON s.activity_code = a.activity_code " +
