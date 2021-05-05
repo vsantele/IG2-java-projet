@@ -3,8 +3,11 @@ package business;
 import data.access.*;
 import exception.data.AddBookingException;
 import exception.data.DeleteBookingException;
+import exception.data.GetBookingsException;
 import exception.data.UpdateBookingException;
 import model.*;
+
+import java.util.ArrayList;
 
 public class BookingManager {
   private BookingDataAccess dao;
@@ -29,5 +32,9 @@ public class BookingManager {
   
   public int deleteBooking(Booking booking) throws DeleteBookingException {
     return dao.deleteBooking(booking);
+  }
+  
+  public ArrayList<Booking> getBookings() throws GetBookingsException {
+    return dao.getBookings();
   }
 }
