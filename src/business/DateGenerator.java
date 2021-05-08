@@ -15,12 +15,10 @@ public class DateGenerator {
     ArrayList<LocalDate> dates = new ArrayList<>();
   
     ArrayList<Date> sessionDates = dao.getDates(session, start, end);
-    
-    // TODO : Générer les dates si besoin + retirer les canceled si besoins
+
     if (session.getWeekly()) {
       DayOfWeek sessionDayOfWeek = session.getNumDay();
       DayOfWeek startDayOfWeek = start.getDayOfWeek();
-      // TODO: Fix si changement de semaine
       int diffDay = sessionDayOfWeek.getValue() - startDayOfWeek.getValue();
       if (diffDay < 0) {
         diffDay += 7;
