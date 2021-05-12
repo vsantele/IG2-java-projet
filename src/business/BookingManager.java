@@ -1,10 +1,7 @@
 package business;
 
 import data.access.*;
-import exception.data.AddBookingException;
-import exception.data.DeleteBookingException;
-import exception.data.GetBookingsException;
-import exception.data.UpdateBookingException;
+import exception.data.*;
 import model.*;
 
 import java.util.ArrayList;
@@ -36,5 +33,9 @@ public class BookingManager {
   
   public ArrayList<Booking> getBookings() throws GetBookingsException {
     return dao.getBookings();
+  }
+  
+  public ArrayList<Session> getSessions(Activity activity) throws GetSessionsException {
+    return dao.getSessions(activity);
   }
 }

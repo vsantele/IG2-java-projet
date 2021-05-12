@@ -26,6 +26,8 @@ public class Form {
   private ChoiceBox<String> activityPicker;
   private ChoiceBox<String> sessionPicker;
   private ChoiceBox<String> datePicker;
+  private Button confirmBtn;
+  private Button cancelBtn;
 
   
   public Form(Stage primaryStage) {
@@ -49,6 +51,8 @@ public class Form {
     activityPicker = new ChoiceBox<>();
     sessionPicker = new ChoiceBox<>();
     datePicker = new ChoiceBox<>();
+    confirmBtn = new Button("Confirmer");
+    cancelBtn = new Button("Annuler");
 
     datePicker.getItems().add("Date 1");
     datePicker.getItems().add("Date 2");
@@ -76,6 +80,8 @@ public class Form {
     grid.add(sessionPicker, 1,9);
     grid.add(new Label("Date: "),0,10);
     grid.add(datePicker, 1,10);
+    grid.add(confirmBtn, 0,11);
+    grid.add(cancelBtn, 1,11);
 
 
     stage.initModality(Modality.APPLICATION_MODAL);

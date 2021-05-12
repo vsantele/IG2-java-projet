@@ -236,12 +236,12 @@ public class BookingDBAccess implements BookingDataAccess {
       
       while(data.next()) {
         Integer bookingId = data.getInt("booking_id");
-        String lastName = data.getString("last_name");
-        String firstName = data.getString("first_name");
+        String lastName = data.getString("lastname");
+        String firstName = data.getString("firstname");
         Double amount = data.getDouble("amount");
         Boolean isPaid = data.getBoolean("is_paid");
         String phone = data.getString("phone");
-        java.sql.Date sqlBirthDate = data.getDate("birth_date");
+        java.sql.Date sqlBirthDate = data.getDate("birthdate");
         LocalDate birthdate = null;
         if (sqlBirthDate != null) {
           birthdate = sqlBirthDate.toLocalDate();
@@ -277,12 +277,12 @@ public class BookingDBAccess implements BookingDataAccess {
       
       while (data.next()) {
         Integer bookingId = data.getInt("booking_id");
-        String lastName = data.getString("last_name");
-        String firstName = data.getString("first_name");
+        String lastName = data.getString("lastname");
+        String firstName = data.getString("firstname");
         Double amount = data.getDouble("amount");
         Boolean isPaid = data.getBoolean("is_paid");
         String phone = data.getString("phone");
-        java.sql.Date sqlBirthDate = data.getDate("birth_date");
+        java.sql.Date sqlBirthDate = data.getDate("birthdate");
         LocalDate birthdate = null;
         if (sqlBirthDate != null) {
           birthdate = sqlBirthDate.toLocalDate();
@@ -348,6 +348,10 @@ public class BookingDBAccess implements BookingDataAccess {
     
     try {
       PreparedStatement req = connection.prepareStatement(sql);
+    
+      req.setTime(1,Utils.toSqlTime(time));
+      
+      ResultSet data = req.executeQuery();
       
     } catch (SQLException e) {
       e.printStackTrace();
