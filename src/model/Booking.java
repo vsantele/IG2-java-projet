@@ -41,6 +41,10 @@ public class Booking {
     this(null, lastname, firstname, amount, isPaid, phone, birthdate, email, date, charity, session);
   }
   
+  public Booking(String lastname, String firstname, Double amount, LocalDate birthdate) {
+    this(null, lastname, firstname, amount, null, null, birthdate, (String) null, null, (String) null, null);
+  }
+  
   public void setId(Integer id) {
     this.id = id;
   }

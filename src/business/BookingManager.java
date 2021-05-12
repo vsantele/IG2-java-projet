@@ -4,6 +4,7 @@ import data.access.*;
 import exception.data.*;
 import model.*;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 
 public class BookingManager {
@@ -37,5 +38,17 @@ public class BookingManager {
   
   public ArrayList<Session> getSessions(Activity activity) throws GetSessionsException {
     return dao.getSessions(activity);
+  }
+  
+  public ArrayList<String> getCharityAtHour(LocalTime time) throws GetCharityAtHourException {
+    return dao.getCharityAtHour(time);
+  }
+  
+  public ArrayList<Booking> getPeoplePerActivityAndCharity(Activity activity, Charity charity) throws GetPeoplePerActivityAndCharityException {
+    return dao.getPeoplePerActivityAndCharity(activity, charity);
+  }
+  
+  public ArrayList<AmountActivity> getAmountsPerActivity(Charity charity) throws GetAmountsPerActivityException {
+    return dao.getAmountsPerActivity(charity);
   }
 }

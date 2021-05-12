@@ -300,32 +300,41 @@ public class BookingDBAccess implements BookingDataAccess {
     return bookings;
   }
   
-  public void getAmountsPerActivity(Charity charity) throws GetAmountsPerActivityException {
-    String sql = "SELECT SUM(b.amount) as \"somme\", a.title " +
+  public ArrayList<AmountActivity> getAmountsPerActivity(Charity charity) throws GetAmountsPerActivityException {
+    String sql = "SELECT SUM(b.amount) as \"amounts\", a.title " +
             "FROM booking b " +
             "JOIN session s ON b.session_id = s.session_id " +
             "JOIN activity a ON s.activity_code = a.activity_code " +
             "WHERE b.charity_code = ?;";
-    
+    ArrayList<AmountActivity> resultList = new ArrayList<>();
     try {
       PreparedStatement req = connection.prepareStatement(sql);
       
       req.setString(1, charity.getCode());
       
       ResultSet data = req.executeQuery();
+      
+      while (data.next()) {
+        Double amount = data.getDouble("amounts");
+        String activity = data.getString("title");
+        AmountActivity amountActivity = new AmountActivity(amount, activity);
+        resultList.add(amountActivity);
+      }
     } catch (SQLException e) {
       throw new GetAmountsPerActivityException(e.getMessage());
     }
+    return resultList;
   }
   
   @Override
-  public void getPeoplePerActivityAndCharity(Activity activity, Charity charity) throws GetPeoplePerActivityAndCharityException {
-    String sql = "SELECT b.firstname, b.lastname, b.birthdate, b.amount " +
+  public ArrayList<Booking> getPeoplePerActivityAndCharity(Activity activity, Charity charity) throws GetPeoplePerActivityAndCharityException {
+    String sql = "SELECT b.firstname, b.lastname, b.amount, b.birthdate " +
             "FROM booking b " +
             "JOIN session s ON b.session_id = s.session_id " +
             "JOIN charity c ON b.charity_code = c.charity_code " +
             "WHERE s.activity_code = ? AND c.charity_code = ?";
     
+    ArrayList<Booking> resultList = new ArrayList<>();
     try {
       PreparedStatement req = connection.prepareStatement(sql);
       
@@ -333,19 +342,32 @@ public class BookingDBAccess implements BookingDataAccess {
       req.setString(2,charity.getCode());
       
       ResultSet data = req.executeQuery();
+        while (data.next()){
+          String firstname = data.getString("firstname");
+          String lastname = data.getString("lastname");
+          Double amount = data.getDouble("amount");
+          java.sql.Date sqlBirthDate = data.getDate("birthdate");
+          LocalDate birthdate = null;
+          if (sqlBirthDate != null) {
+            birthdate = sqlBirthDate.toLocalDate();
+          }
+          Booking booking = new Booking(firstname, lastname, amount, birthdate);
+          resultList.add(booking);
+        }
     } catch (SQLException e) {
       e.printStackTrace();
       throw new GetPeoplePerActivityAndCharityException(e.getMessage());
     }
+    return resultList;
   }
   
-  public void getCharityAtHour(LocalTime time) throws GetCharityAtHourException {
+  public ArrayList<String> getCharityAtHour(LocalTime time) throws GetCharityAtHourException {
     String sql = "SELECT c.name FROM charity c " +
             "JOIN booking b ON c.charity_code = b.charity_code " +
             "JOIN session s ON b.session_id = s.session_id " +
             "WHERE ? BETWEEN s.start_hour AND s.end_hour " +
             "GROUP BY c.name;";
-    
+    ArrayList<String> resultList = new ArrayList<>();
     try {
       PreparedStatement req = connection.prepareStatement(sql);
     
@@ -353,9 +375,15 @@ public class BookingDBAccess implements BookingDataAccess {
       
       ResultSet data = req.executeQuery();
       
+      while (data.next()) {
+        resultList.add(data.getString("name"));
+      }
+      
     } catch (SQLException e) {
       e.printStackTrace();
       throw new GetCharityAtHourException(e.getMessage());
     }
+    
+    return resultList;
   }
 }

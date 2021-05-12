@@ -19,8 +19,8 @@ public interface BookingDataAccess {
   ArrayList<Session> getSessions(Activity activity) throws GetSessionsException;
   ArrayList<Charity> getCharities() throws GetCharityException;
   
-  void getAmountsPerActivity(Charity charity) throws GetAmountsPerActivityException;
-  void getPeoplePerActivityAndCharity(Activity activity, Charity charity) throws GetPeoplePerActivityAndCharityException;
-  void getCharityAtHour(LocalTime time) throws GetCharityAtHourException;
+  ArrayList<AmountActivity> getAmountsPerActivity(Charity charity) throws GetAmountsPerActivityException;
+  ArrayList<Booking> getPeoplePerActivityAndCharity(Activity activity, Charity charity) throws GetPeoplePerActivityAndCharityException;
+  ArrayList<String> getCharityAtHour(LocalTime time) throws GetCharityAtHourException;
   
 }
