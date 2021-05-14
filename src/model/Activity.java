@@ -12,7 +12,11 @@ public class Activity {
   public String getCode() {
     return code;
   }
-
+  
+  public String getLabel() {
+    return label;
+  }
+  
   @Override
   public String toString() {
     return "Activity{" +
@@ -20,4 +24,5 @@ public class Activity {
             ", label='" + label + '\'' +
             '}';
   }
+  
 }

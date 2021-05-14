@@ -1,5 +1,8 @@
 package model;
 
+import exception.model.booking.InvalidBookingException;
+import util.Utils;
+
 import java.time.LocalDate;
 
 public class Booking {
@@ -17,36 +20,91 @@ public class Booking {
   private Session session;
   private Integer sessionId;
 
-  public Booking(Integer id, String lastname, String firstname, Double amount, Boolean isPaid, String phone, LocalDate birthdate, String email, LocalDate date, Charity charity, Session session) {
+  public Booking(Integer id, String lastname, String firstname, Double amount, Boolean isPaid, String phone, LocalDate birthdate, String email, LocalDate date, Charity charity, Session session) throws InvalidBookingException {
     setId(id);
-    this.lastname = lastname;
-    this.firstname = firstname;
-    this.amount = amount;
-    this.isPaid = isPaid;
-    this.phone = phone;
-    this.birthdate = birthdate;
-    this.email = email;
-    this.date = date;
-    this.charity = charity;
-    this.session = session;
+    setLastname(lastname);
+    setFirstname(firstname);
+    setAmount(amount);
+    setPaid(isPaid);
+    setPhone(phone);
+    setBirthdate(birthdate);
+    setEmail(email);
+    setDate(date);
+    setCharity(charity);
+    setSession(session);
+    
+    if (getCharityCode() == null) throw new InvalidBookingException("association");
   }
   
-  public Booking(Integer id, String lastname, String firstname, Double amount, Boolean isPaid, String phone, LocalDate birthdate, String email, LocalDate date, String charityCode, Integer sessionId) {
+  public Booking(Integer id, String lastname, String firstname, Double amount, Boolean isPaid, String phone, LocalDate birthdate, String email, LocalDate date, String charityCode, Integer sessionId) throws InvalidBookingException {
     this(id, lastname, firstname, amount, isPaid, phone, birthdate, email, date, (Charity) null,  (Session) null);
-    this.charityCode = charityCode;
-    this.sessionId = sessionId;
+    this.setCharityCode(charityCode);
+    this.setSessionId(sessionId);
   }
 
-  public Booking(String lastname, String firstname, Double amount, Boolean isPaid, String phone, LocalDate birthdate, String email, LocalDate date, Charity charity, Session session) {
+  public Booking(String lastname, String firstname, Double amount, Boolean isPaid, String phone, LocalDate birthdate, String email, LocalDate date, Charity charity, Session session) throws InvalidBookingException {
     this(null, lastname, firstname, amount, isPaid, phone, birthdate, email, date, charity, session);
   }
   
-  public Booking(String lastname, String firstname, Double amount, LocalDate birthdate) {
-    this(null, lastname, firstname, amount, null, null, birthdate, (String) null, null, (String) null, null);
-  }
   
   public void setId(Integer id) {
     this.id = id;
+  }
+  
+  public void setLastname(String lastname) throws InvalidBookingException {
+    if (lastname == null) throw new InvalidBookingException("nom");
+    this.lastname = lastname;
+  }
+  
+  public void setFirstname(String firstname) throws InvalidBookingException {
+    if (firstname == null) throw new InvalidBookingException("prénom");
+    this.firstname = firstname;
+  }
+  
+  public void setAmount(Double amount) throws InvalidBookingException {
+    if (amount == null || amount < 0) throw new InvalidBookingException("montant");
+    this.amount = amount;
+  }
+  
+  public void setPaid(Boolean paid) throws InvalidBookingException {
+    if (paid == null) throw new InvalidBookingException("est payé");
+    isPaid = paid;
+  }
+  
+  public void setPhone(String phone) throws InvalidBookingException {
+    if (phone == null || Utils.isPhoneValid(phone)) throw new InvalidBookingException("téléphone");
+    this.phone = phone;
+  }
+  
+  public void setBirthdate(LocalDate birthdate) throws InvalidBookingException {
+    if (birthdate != null && birthdate.isAfter(LocalDate.now())) throw new InvalidBookingException("date de naissance");
+    this.birthdate = birthdate;
+  }
+  
+  public void setEmail(String email) {
+    this.email = email;
+  }
+  
+  public void setDate(LocalDate date) throws InvalidBookingException {
+    if (date == null) throw new InvalidBookingException("date");
+    this.date = date;
+  }
+  
+  public void setCharity(Charity charity) throws InvalidBookingException {
+    if (charity == null) throw new InvalidBookingException("association");
+    this.charity = charity;
+  }
+  
+  public void setCharityCode(String charityCode) {
+    this.charityCode = charityCode;
+  }
+  
+  public void setSession(Session session) {
+    this.session = session;
+  }
+  
+  public void setSessionId(Integer sessionId) {
+    this.sessionId = sessionId;
   }
   
   public Integer getId() {
@@ -65,7 +123,7 @@ public class Booking {
     return amount;
   }
   
-  public Boolean getPaid() {
+  public Boolean isPaid() {
     return isPaid;
   }
   
@@ -125,4 +183,6 @@ public class Booking {
             ", session=" + session +
             '}';
   }
+  
+  
 }

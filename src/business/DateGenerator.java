@@ -4,7 +4,6 @@ import data.access.*;
 import exception.data.GetDatesException;
 import model.*;
 import model.Date;
-import util.Utils;
 
 import java.time.*;
 import java.util.*;
@@ -16,7 +15,7 @@ public class DateGenerator {
   
     ArrayList<Date> sessionDates = dao.getDates(session, start, end);
 
-    if (session.getWeekly()) {
+    if (session.isWeekly()) {
       DayOfWeek sessionDayOfWeek = session.getNumDay();
       DayOfWeek startDayOfWeek = start.getDayOfWeek();
       int diffDay = sessionDayOfWeek.getValue() - startDayOfWeek.getValue();

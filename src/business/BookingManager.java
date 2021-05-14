@@ -40,6 +40,14 @@ public class BookingManager {
     return dao.getSessions(activity);
   }
   
+  public ArrayList<Activity> getActivities() throws GetActivitiesException {
+    return dao.getActivities();
+  }
+  
+  public ArrayList<Charity> getCharities() throws GetCharityException {
+    return dao.getCharities();
+  }
+  
   public ArrayList<String> getCharityAtHour(LocalTime time) throws GetCharityAtHourException {
     return dao.getCharityAtHour(time);
   }

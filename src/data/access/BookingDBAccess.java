@@ -3,6 +3,7 @@ package data.access;
 import data.connection.MariadbConnection;
 import exception.SessionNumDayException;
 import exception.data.*;
+import exception.model.booking.InvalidBookingException;
 import model.*;
 import model.Date;
 import util.Utils;
@@ -28,7 +29,7 @@ public class BookingDBAccess implements BookingDataAccess {
       req.setString(1, booking.getLastname());
       req.setString(2, booking.getFirstname());
       req.setDouble(3, booking.getAmount());
-      req.setBoolean(4, booking.getPaid());
+      req.setBoolean(4, booking.isPaid());
       req.setString(5, booking.getPhone());
 
       java.sql.Date sqlBirthDate = Utils.toSqlDate(booking.getBirthdate());
@@ -73,7 +74,7 @@ public class BookingDBAccess implements BookingDataAccess {
       req.setString(1, booking.getLastname());
       req.setString(2, booking.getFirstname());
       req.setDouble(3, booking.getAmount());
-      req.setBoolean(4, booking.getPaid());
+      req.setBoolean(4, booking.isPaid());
       req.setString(5, booking.getPhone());
   
       java.sql.Date sqlBirthDate = Utils.toSqlDate(booking.getBirthdate());
@@ -116,8 +117,8 @@ public class BookingDBAccess implements BookingDataAccess {
     ArrayList<Date> dates = new ArrayList<>();
     String sql = "SELECT date_id, date, type " +
             "FROM date " +
-            "WHERE session_id = ?" +
-            "AND date BETWEEN ? and ?";
+            "WHERE session_id = ? " +
+            "AND date BETWEEN ? AND ?";
     
     try {
       PreparedStatement req = connection.prepareStatement(sql);
@@ -250,11 +251,12 @@ public class BookingDBAccess implements BookingDataAccess {
         LocalDate date = data.getDate("date").toLocalDate();
         String charityCode = data.getString("charity_code");
         Integer sessionId = data.getInt("session_id");
-        
-        Booking booking = new Booking(bookingId, lastName, firstName, amount, isPaid, phone, birthdate, email, date, charityCode, sessionId);
+  
+        Booking booking = null;
+        booking = new Booking(bookingId, lastName, firstName, amount, isPaid, phone, birthdate, email, date, charityCode, sessionId);
         bookings.add(booking);
       }
-    } catch (SQLException e) {
+    } catch (SQLException | InvalidBookingException e) {
       throw new GetBookingsException(e.getMessage());
     }
     
@@ -293,7 +295,7 @@ public class BookingDBAccess implements BookingDataAccess {
         Booking booking = new Booking(bookingId, lastName, firstName, amount, isPaid, phone, birthdate, email, date, charityCode, session.getId());
         bookings.add(booking);
       }
-    } catch (SQLException e) {
+    } catch (SQLException | InvalidBookingException e) {
       throw new GetBookingsException(e.getMessage());
     }
     
@@ -328,7 +330,7 @@ public class BookingDBAccess implements BookingDataAccess {
   
   @Override
   public ArrayList<Booking> getPeoplePerActivityAndCharity(Activity activity, Charity charity) throws GetPeoplePerActivityAndCharityException {
-    String sql = "SELECT b.firstname, b.lastname, b.amount, b.birthdate " +
+    String sql = "SELECT b.booking_id, b.firstname, b.lastname, b.amount, b.is_paid, b.phone,  b.birthdate, b.email, b.date, s.session_id " +
             "FROM booking b " +
             "JOIN session s ON b.session_id = s.session_id " +
             "JOIN charity c ON b.charity_code = c.charity_code " +
@@ -343,6 +345,7 @@ public class BookingDBAccess implements BookingDataAccess {
       
       ResultSet data = req.executeQuery();
         while (data.next()){
+          Integer id = data.getInt("booking_id");
           String firstname = data.getString("firstname");
           String lastname = data.getString("lastname");
           Double amount = data.getDouble("amount");
@@ -351,11 +354,19 @@ public class BookingDBAccess implements BookingDataAccess {
           if (sqlBirthDate != null) {
             birthdate = sqlBirthDate.toLocalDate();
           }
-          Booking booking = new Booking(firstname, lastname, amount, birthdate);
+          Boolean isPaid = data.getBoolean("is_paid");
+          String phone = data.getString("phone");
+          String email = data.getString("email");
+          java.sql.Date sqlDate = data.getDate("date");
+          LocalDate date = null;
+          if (sqlDate != null) {
+            date = sqlDate.toLocalDate();
+          }
+          Integer sessionId = data.getInt("session_id");
+          Booking booking = new Booking(id, lastname, firstname, amount, isPaid, phone, birthdate, email, date,  charity.getCode(), sessionId);
           resultList.add(booking);
         }
-    } catch (SQLException e) {
-      e.printStackTrace();
+    } catch (SQLException | InvalidBookingException e ) {
       throw new GetPeoplePerActivityAndCharityException(e.getMessage());
     }
     return resultList;
@@ -380,7 +391,6 @@ public class BookingDBAccess implements BookingDataAccess {
       }
       
     } catch (SQLException e) {
-      e.printStackTrace();
       throw new GetCharityAtHourException(e.getMessage());
     }
     

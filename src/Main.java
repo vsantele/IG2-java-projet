@@ -1,3 +1,4 @@
+import business.BookingManager;
 import data.access.*;
 import javafx.application.Application;
 import javafx.geometry.Pos;
@@ -7,6 +8,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.*;
 import view.*;
+import view.stage.Form;
 
 import java.util.ArrayList;
 
@@ -16,6 +18,7 @@ public class Main extends Application {
     }
     @Override
     public void start(Stage primaryStage){
+        BookingManager bookingManager = new BookingManager();
         primaryStage.setTitle("Application");
         primaryStage.centerOnScreen();
         primaryStage.setWidth(800);
@@ -28,6 +31,6 @@ public class Main extends Application {
         //vBox.setAlignment(Pos.CENTER);
         primaryStage.setScene(scene);
 
-
+        new Form(primaryStage, bookingManager);
     }
 }

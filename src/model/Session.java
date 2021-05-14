@@ -4,6 +4,8 @@ import exception.SessionNumDayException;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;
+import java.time.format.TextStyle;
+import java.util.Locale;
 
 public class Session {
   private Integer id;
@@ -41,16 +43,30 @@ public class Session {
     this.numDay = DayOfWeek.of(numDay);
   }
   
+  
+  
   public Integer getId() {
     return id;
   }
   
-  public Boolean getWeekly() {
+  public Boolean isWeekly() {
     return isWeekly;
   }
   
   public DayOfWeek getNumDay() {
     return numDay;
+  }
+  
+  public String getDayOfWeek() {
+    return numDay.getDisplayName(TextStyle.FULL, Locale.getDefault());
+  }
+  
+  public LocalTime getStartHour() {
+    return startHour;
+  }
+  
+  public LocalTime getEndHour() {
+    return endHour;
   }
   
   @Override
