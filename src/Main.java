@@ -3,7 +3,10 @@ import data.access.*;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.*;
@@ -23,13 +26,33 @@ public class Main extends Application {
         primaryStage.centerOnScreen();
         primaryStage.setWidth(800);
         primaryStage.setHeight(500);
-        primaryStage.show();
 
-        VBox vBox = new VBox(new Label("Booking Table"));
-        Scene scene = new Scene(vBox);
+        Label labelTop = new Label("Booking Table");
+        Button buttonAdd = new Button("Add");
+        Button buttonResearch1 = new Button("Research 1");
+        Button buttonResearch2 = new Button("Research 2");
+        Button buttonResearch3 = new Button("Research 3");
+        HBox hBoxTop = new HBox(labelTop, buttonAdd, buttonResearch1, buttonResearch2, buttonResearch3);
+
+        int nbRows = 10;
+        HBox[] rows = new HBox[nbRows];
+
+        for(int i = 0; i <= nbRows; i++){
+            Label labelRow = new Label("Row Infos");
+            Button buttonEdit = new Button("Edit");
+            Button buttonDelete = new Button("Delete");
+            HBox row = new HBox(labelRow, buttonEdit, buttonDelete);
+            rows[i] = row;
+        }
+        VBox vBoxTable = new VBox(rows);
+        VBox vBox = new VBox(hBoxTop, vBoxTable);
+        Pane pane = new Pane(vBox);
+        pane.isVisible();
+        Scene scene = new Scene(pane);
         // border pane
         //vBox.setAlignment(Pos.CENTER);
         primaryStage.setScene(scene);
+        primaryStage.show();
 
         new Form(primaryStage, bookingManager);
     }
