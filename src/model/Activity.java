@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Objects;
+
 public class Activity {
   private String code;
   private String label;
@@ -23,6 +25,14 @@ public class Activity {
             "code='" + code + '\'' +
             ", label='" + label + '\'' +
             '}';
+  }
+  
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Activity activity = (Activity) o;
+    return Objects.equals(code, activity.code);
   }
   
 }

@@ -6,6 +6,7 @@ import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.time.format.TextStyle;
 import java.util.Locale;
+import java.util.Objects;
 
 public class Session {
   private Integer id;
@@ -81,4 +82,13 @@ public class Session {
             ", activity=" + activity +
             '}';
   }
+  
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Session session = (Session) o;
+    return Objects.equals(id, session.id);
+  }
+  
 }

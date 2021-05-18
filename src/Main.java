@@ -1,5 +1,7 @@
 import business.BookingManager;
+import controller.BookingController;
 import data.access.*;
+import exception.data.GetBookingsException;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -10,6 +12,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.*;
+import util.Utils;
 import view.*;
 import view.stage.Form;
 
@@ -19,6 +22,7 @@ public class Main extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+    
     @Override
     public void start(Stage primaryStage){
         BookingManager bookingManager = new BookingManager();
@@ -37,7 +41,7 @@ public class Main extends Application {
         int nbRows = 10;
         HBox[] rows = new HBox[nbRows];
 
-        for(int i = 0; i <= nbRows; i++){
+        for(int i = 0; i < nbRows; i++){
             Label labelRow = new Label("Row Infos");
             Button buttonEdit = new Button("Edit");
             Button buttonDelete = new Button("Delete");
@@ -53,7 +57,15 @@ public class Main extends Application {
         //vBox.setAlignment(Pos.CENTER);
         primaryStage.setScene(scene);
         primaryStage.show();
-
-        new Form(primaryStage, bookingManager);
+        BookingController bookingController = new BookingController(bookingManager);
+        Form form = new Form(primaryStage, bookingController);
+        try {
+            ArrayList<Booking> bookings = bookingManager.getBookings();
+//            form.setBooking(bookings.get(0));
+//            form.setUpdate(true);
+            form.show();
+        } catch (GetBookingsException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Objects;
+
 public class Charity {
   private String code;
   private String name;
@@ -63,4 +65,13 @@ public class Charity {
             ", country='" + country + '\'' +
             '}';
   }
+  
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Charity charity = (Charity) o;
+    return Objects.equals(code, charity.code);
+  }
+  
 }

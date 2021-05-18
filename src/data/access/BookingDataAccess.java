@@ -23,4 +23,7 @@ public interface BookingDataAccess {
   ArrayList<Booking> getPeoplePerActivityAndCharity(Activity activity, Charity charity) throws GetPeoplePerActivityAndCharityException;
   ArrayList<String> getCharityAtHour(LocalTime time) throws GetCharityAtHourException;
   
+  Activity getActivity(Integer session) throws GetActivityException;
+  Charity getCharity(String charityCode) throws GetCharityException;
+  Boolean isSessionFull(Session session, LocalDate date) throws IsSessionFullException;
 }

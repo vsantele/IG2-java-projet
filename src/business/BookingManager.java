@@ -4,6 +4,7 @@ import data.access.*;
 import exception.data.*;
 import model.*;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
@@ -44,8 +45,16 @@ public class BookingManager {
     return dao.getActivities();
   }
   
+  public Charity getCharity(String charityCode) throws GetCharityException {
+    return dao.getCharity(charityCode);
+  }
+  
   public ArrayList<Charity> getCharities() throws GetCharityException {
     return dao.getCharities();
+  }
+  
+  public Boolean isSessionFull(Session session, LocalDate date) throws IsSessionFullException {
+    return dao.isSessionFull(session, date);
   }
   
   public ArrayList<String> getCharityAtHour(LocalTime time) throws GetCharityAtHourException {
@@ -58,5 +67,9 @@ public class BookingManager {
   
   public ArrayList<AmountActivity> getAmountsPerActivity(Charity charity) throws GetAmountsPerActivityException {
     return dao.getAmountsPerActivity(charity);
+  }
+  
+  public Activity getActivity(Integer session) throws GetActivityException {
+    return dao.getActivity(session);
   }
 }

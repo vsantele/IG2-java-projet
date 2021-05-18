@@ -31,14 +31,18 @@ public class BookingDBAccess implements BookingDataAccess {
       req.setDouble(3, booking.getAmount());
       req.setBoolean(4, booking.isPaid());
       req.setString(5, booking.getPhone());
-
-      java.sql.Date sqlBirthDate = Utils.toSqlDate(booking.getBirthdate());
-      req.setDate(6, sqlBirthDate);
+      
+      if (booking.getBirthdate() == null) {
+        req.setNull(6, Types.DATE);
+      } else {
+        java.sql.Date sqlBirthDate = Utils.toSqlDate(booking.getBirthdate());
+        req.setDate(6, sqlBirthDate);
+      }
 
       if (booking.getEmail() == null) {
-        req.setString(7, booking.getEmail());
-      } else {
         req.setNull(7, Types.VARCHAR);
+      } else {
+        req.setString(7, booking.getEmail());
       }
 
       java.sql.Date sqlDate = Utils.toSqlDate(booking.getDate());
@@ -66,7 +70,7 @@ public class BookingDBAccess implements BookingDataAccess {
   }
   
   public int updateBooking(Booking booking) throws UpdateBookingException {
-    String sql = "UPDATE booking set lastname = ?, firstname = ?, amount = ?, is_paid = ?, phone = ?, birthdate = ?, email = ?, date = ?, charity_code = ?, session_id = ?" +
+    String sql = "UPDATE booking set lastname = ?, firstname = ?, amount = ?, is_paid = ?, phone = ?, birthdate = ?, email = ?, date = ?, charity_code = ?, session_id = ? " +
             "WHERE booking_id = ?;";
     try {
       PreparedStatement req = connection.prepareStatement(sql);
@@ -77,8 +81,12 @@ public class BookingDBAccess implements BookingDataAccess {
       req.setBoolean(4, booking.isPaid());
       req.setString(5, booking.getPhone());
   
-      java.sql.Date sqlBirthDate = Utils.toSqlDate(booking.getBirthdate());
-      req.setDate(6, sqlBirthDate);
+      if (booking.getBirthdate() == null) {
+        java.sql.Date sqlBirthDate = Utils.toSqlDate(booking.getBirthdate());
+        req.setDate(6, sqlBirthDate);
+      } else {
+        req.setNull(6, Types.DATE);
+      }
   
       if (booking.getEmail() == null) {
         req.setString(7, booking.getEmail());
@@ -144,6 +152,26 @@ public class BookingDBAccess implements BookingDataAccess {
     return dates;
   }
   
+  public Activity getActivity(Integer session) throws GetActivityException {
+    String sql = "SELECT a.activity_code, a.title FROM activity a JOIN session s ON a.activity_code = s.activity_code WHERE s.session_id = ?;";
+    
+    Activity activity = null;
+    try {
+      PreparedStatement req = connection.prepareStatement(sql);
+      
+      req.setInt(1, session);
+      
+      ResultSet data = req.executeQuery();
+      
+      while (data.next()) {
+        activity = new Activity(data.getString("activity_code"), data.getString("title"));
+      }
+    } catch (SQLException e) {
+      throw new GetActivityException(e.getMessage());
+    }
+    return activity;
+  }
+  
   public ArrayList<Activity> getActivities() throws GetActivitiesException {
     ArrayList<Activity> activities = new ArrayList<>();
     String sql = "SELECT activity_code, title FROM activity;";
@@ -196,6 +224,32 @@ public class BookingDBAccess implements BookingDataAccess {
     }
     
     return sessions;
+  }
+  
+  public Charity getCharity(String charityCode) throws GetCharityException {
+    String sql = "SELECT name, contact, address, city, country, zip_code FROM charity WHERE charity_code = ?;";
+  
+    Charity charity = null;
+    try {
+      PreparedStatement req = connection.prepareStatement(sql);
+    
+      req.setString(1, charityCode);
+    
+      ResultSet data = req.executeQuery();
+    
+      while (data.next()) {
+        String name = data.getString("name");
+        String contact = data.getString("contact");
+        String address = data.getString("address");
+        String city = data.getString("city");
+        String country = data.getString("country");
+        String zipCode = data.getString("zip_code");
+        charity = new Charity(charityCode, name, contact, address, city, country, zipCode);
+      }
+    } catch (SQLException e) {
+      throw new GetCharityException(e.getMessage());
+    }
+    return charity;
   }
   
   public ArrayList<Charity> getCharities() throws GetCharityException{
@@ -302,8 +356,33 @@ public class BookingDBAccess implements BookingDataAccess {
     return bookings;
   }
   
+  public Boolean isSessionFull(Session session, LocalDate date) throws IsSessionFullException {
+    String sql = "SELECT count(*) as count, s.nb_max FROM booking b JOIN session s ON b.session_id = s.session_id  WHERE b.session_id = ? AND b.date = ?";
+    
+    Boolean isFull = null;
+  
+    try {
+      PreparedStatement req = connection.prepareStatement(sql);
+      
+      req.setInt(1, session.getId());
+      req.setDate(2,Utils.toSqlDate(date));
+      
+      ResultSet data = req.executeQuery();
+      
+      while (data.next()) {
+        Integer count = data.getInt("count");
+        Integer nbMax = data.getInt("nb_max");
+        
+        isFull = count >= nbMax;
+      }
+    } catch (SQLException e) {
+      throw new IsSessionFullException(e.getMessage());
+    }
+    return isFull;
+  }
+  
   public ArrayList<AmountActivity> getAmountsPerActivity(Charity charity) throws GetAmountsPerActivityException {
-    String sql = "SELECT SUM(b.amount) as \"amounts\", a.title " +
+    String sql = "SELECT SUM(b.amount) as amounts, a.title " +
             "FROM booking b " +
             "JOIN session s ON b.session_id = s.session_id " +
             "JOIN activity a ON s.activity_code = a.activity_code " +

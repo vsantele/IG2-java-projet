@@ -1,17 +1,17 @@
 package view.stage;
 
-import business.BookingManager;
 import business.DateGenerator;
-import exception.data.GetActivitiesException;
-import exception.data.GetCharityException;
-import exception.data.GetDatesException;
-import exception.data.GetSessionsException;
+import controller.BookingController;
+import exception.data.*;
 import exception.model.booking.InvalidBookingException;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
@@ -23,15 +23,25 @@ import model.Charity;
 import model.Session;
 import view.component.ActivityCell;
 import view.component.CharityCell;
+import view.component.DateCell;
 import view.component.SessionCell;
 
+import java.awt.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class Form extends Stage{
-  private Stage stage;
   private Scene scene;
   private GridPane grid;
+  private BookingController controller;
+  
+  private ArrayList<Charity> charities;
+  private ArrayList<Activity> activities;
+  private ArrayList<Session> sessions;
+  private ArrayList<LocalDate> dates;
+  
+  private Boolean isUpdate;
+  private Booking booking;
 
   private TextField firstnameTextField;
   private TextField lastnameTextField;
@@ -51,13 +61,19 @@ public class Form extends Stage{
   private ComboBox<LocalDate> datePicker;
   private Button confirmBtn;
   private Button cancelBtn;
+  
+  private Alert infoAlert;
+  private Alert errorAlert;
 
   
-  public Form(Stage primaryStage, BookingManager bookingManager) {
+  public Form(Stage primaryStage, BookingController controller) {
+    this.controller = controller;
     grid = new GridPane();
     grid.setVgap(10.0);
     grid.setHgap(5.0);
     scene = new Scene(grid);
+  
+    isUpdate = false;
 
     firstnameTextField = new TextField();
     lastnameTextField = new TextField();
@@ -77,7 +93,7 @@ public class Form extends Stage{
     charityPicker.setButtonCell(new CharityCell());
     charityPicker.setCellFactory(listView -> new CharityCell());
     try {
-      ArrayList<Charity> charities = bookingManager.getCharities();
+      charities = controller.getCharities();
       charityPicker.setItems(FXCollections.observableArrayList(charities));
     } catch (GetCharityException e) {
       e.printStackTrace();
@@ -86,7 +102,7 @@ public class Form extends Stage{
     activityPicker = new ComboBox<>();
   
     try {
-      ArrayList<Activity> activities = bookingManager.getActivities();
+      activities = controller.getActivities();
       activityPicker.setItems(FXCollections.observableArrayList(activities));
     } catch (GetActivitiesException e) {
       e.printStackTrace();
@@ -99,7 +115,7 @@ public class Form extends Stage{
         Activity selectedActivity = activityPicker.getValue();
         if (selectedActivity != null) {
           
-          ArrayList<Session> sessions = bookingManager.getSessions(selectedActivity);
+          sessions = controller.getSessions(selectedActivity);
           sessionPicker.setItems(FXCollections.observableArrayList(sessions));
           sessionPicker.setDisable(false);
         } else {
@@ -121,7 +137,7 @@ public class Form extends Stage{
       try {
         Session selectedSession = sessionPicker.getValue();
         if (selectedSession != null) {
-          ArrayList<LocalDate> dates = DateGenerator.getDates(sessionPicker.getValue());
+          dates = DateGenerator.getDates(sessionPicker.getValue());
           datePicker.setItems(FXCollections.observableArrayList(dates));
           datePicker.setDisable(false);
         } else {
@@ -132,12 +148,16 @@ public class Form extends Stage{
       }
     });
     datePicker = new ComboBox<>();
-    datePicker.setButtonCell(new view.component.DateCell());
-    datePicker.setCellFactory(listView -> new view.component.DateCell());
+    datePicker.setButtonCell(new DateCell());
+    datePicker.setCellFactory(listView -> new DateCell());
     datePicker.setDisable(true);
     confirmBtn = new Button("Confirmer");
     confirmBtn.setOnAction(new ConfirmHandler());
     cancelBtn = new Button("Annuler");
+    cancelBtn.setOnAction(event -> Toolkit.getDefaultToolkit().beep());
+    
+    infoAlert = new Alert(Alert.AlertType.INFORMATION);
+    errorAlert = new Alert(Alert.AlertType.ERROR);
     
     grid.add(new Label("Prénom: "), 0,0);
     grid.add(firstnameTextField, 1,0);
@@ -169,10 +189,10 @@ public class Form extends Stage{
     this.initOwner(primaryStage);
     this.setTitle("Formulaire");
     this.setScene(scene);
-    this.show();
   }
   
   public void setBooking(Booking booking) {
+    this.booking = booking;
     firstnameTextField.setText(booking.getFirstname());
     lastnameTextField.setText(booking.getLastname());
     phoneTextField.setText(booking.getPhone());
@@ -186,7 +206,31 @@ public class Form extends Stage{
       isPaidNo.setSelected(true);
     }
     
-    charityPicker.setValue(booking.getCharity());
+    try {
+      Charity charity = booking.getCharity();
+      if (charity == null) {
+        charity = controller.getCharity(booking.getCharityCode());
+      }
+      charityPicker.getSelectionModel().select(charity);
+      
+    } catch (GetCharityException e) {
+      e.printStackTrace();
+    }
+    
+    try {
+      Activity activity = controller.getActivity(booking.getSessionId());
+      activityPicker.getSelectionModel().select(activity);
+    } catch (GetActivityException e) {
+      e.printStackTrace();
+    }
+    
+    sessionPicker.getSelectionModel().select(new Session(booking.getSessionId()));
+    
+    datePicker.getSelectionModel().select(booking.getDate());
+  }
+  
+  public void setUpdate(Boolean update) {
+    isUpdate = update;
   }
   
   private class ConfirmHandler implements EventHandler<ActionEvent> {
@@ -202,6 +246,11 @@ public class Form extends Stage{
         amount = Double.parseDouble(amountTextField.getText());
       } catch ( NumberFormatException e ) {
         System.out.println("Mauvais nombre");
+        errorAlert.setTitle("Montant non valide");
+        errorAlert.setHeaderText(null);
+        errorAlert.setContentText("Veuillez entrer un nombre valide");
+        errorAlert.showAndWait();
+        return;
       }
       
       RadioButton isPaidSelected = (RadioButton) isPaidGroup.getSelectedToggle();
@@ -212,9 +261,59 @@ public class Form extends Stage{
       LocalDate date = datePicker.getValue();
   
       try {
-        Booking booking = new Booking(lastname, firstname, amount, isPaid, phone, birthdate, email, date, charity, session);
-        System.out.println("booking = " + booking);
+        if (isUpdate) {
+          if (booking == null) {
+            System.out.println("Aucune réservation n'a été définie");
+          } else {
+            booking.setFirstname(firstname);
+            booking.setLastname(lastname);
+            booking.setPhone(phone);
+            booking.setEmail(email);
+            booking.setBirthdate(birthdate);
+            booking.setAmount(amount);
+            booking.setPaid(isPaid);
+            booking.setCharity(charity);
+            booking.setCharityCode(null);
+            booking.setSession(session);
+            booking.setSessionId(null);
+            booking.setDate(date);
+            Boolean isSuccess = controller.updateBooking(booking);
+            if (isSuccess) {
+              close();
+              infoAlert.setTitle("Succès");
+              infoAlert.setHeaderText(null);
+              infoAlert.setContentText("Réservation modifiée avec succès");
+              infoAlert.showAndWait();
+            } else {
+              errorAlert.setTitle("Erreur");
+              errorAlert.setHeaderText(null);
+              errorAlert.setContentText("La séance est pleine. Veuillez en sélectionner une autre");
+              errorAlert.showAndWait();
+            }
+          }
+        } else {
+          Booking booking = new Booking(firstname, lastname, amount, isPaid, phone, birthdate, email, date, charity, session);
+          Boolean isSuccess = controller.addBooking(booking);
+          if (isSuccess) {
+            close();
+            infoAlert.setTitle("Succès");
+            infoAlert.setHeaderText(null);
+            infoAlert.setContentText("Réservation ajoutée avec succès");
+            infoAlert.showAndWait();
+          } else {
+            errorAlert.setTitle("Erreur");
+            errorAlert.setHeaderText(null);
+            errorAlert.setContentText("La séance est pleine. Veuillez en sélectionner une autre");
+            errorAlert.showAndWait();
+          }
+        }
       } catch (InvalidBookingException e) {
+        errorAlert.setTitle("Erreur");
+        errorAlert.setHeaderText(null);
+        errorAlert.setContentText(e.getMessage());
+        errorAlert.showAndWait();
+      }
+      catch (UpdateBookingException | AddBookingException e) {
         e.printStackTrace();
       }
   
