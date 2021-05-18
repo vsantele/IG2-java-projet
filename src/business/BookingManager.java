@@ -57,7 +57,7 @@ public class BookingManager {
     return dao.isSessionFull(session, date);
   }
   
-  public ArrayList<String> getCharityAtHour(LocalTime time) throws GetCharityAtHourException {
+  public ArrayList<Charity> getCharityAtHour(LocalTime time) throws GetCharityAtHourException {
     return dao.getCharityAtHour(time);
   }
   

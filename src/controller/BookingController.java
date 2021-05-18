@@ -2,11 +2,9 @@ package controller;
 
 import business.BookingManager;
 import exception.data.*;
-import model.Activity;
-import model.Booking;
-import model.Charity;
-import model.Session;
+import model.*;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 
 public class BookingController {
@@ -64,4 +62,15 @@ public class BookingController {
     return false;
   }
   
+  public ArrayList<AmountActivity> getAmountsPerActivity(Charity charity) throws GetAmountsPerActivityException {
+    return bookingManager.getAmountsPerActivity(charity);
+  }
+  
+  public ArrayList<Booking> getPeoplePerActivityAndCharity(Activity activity, Charity charity) throws GetPeoplePerActivityAndCharityException {
+    return bookingManager.getPeoplePerActivityAndCharity(activity, charity);
+  }
+  
+  public ArrayList<Charity> getCharityAtHour(LocalTime time) throws GetCharityAtHourException {
+    return bookingManager.getCharityAtHour(time);
+  }
 }

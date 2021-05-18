@@ -1,9 +1,6 @@
 import business.BookingManager;
 import controller.BookingController;
-import data.access.*;
-import exception.data.GetBookingsException;
 import javafx.application.Application;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -11,12 +8,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import model.*;
-import util.Utils;
-import view.*;
 import view.stage.Form;
-
-import java.util.ArrayList;
+import view.stage.Search1;
+import view.stage.Search2;
+import view.stage.Search3;
 
 public class Main extends Application {
     public static void main(String[] args) {
@@ -26,6 +21,11 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage){
         BookingManager bookingManager = new BookingManager();
+        BookingController bookingController = new BookingController(bookingManager);
+        Form form = new Form(primaryStage, bookingController);
+        Search1 search1 = new Search1(primaryStage, bookingController);
+        Search2 search2 = new Search2(primaryStage, bookingController);
+        Search3 search3 = new Search3(primaryStage, bookingController);
         primaryStage.setTitle("Application");
         primaryStage.centerOnScreen();
         primaryStage.setWidth(800);
@@ -33,9 +33,22 @@ public class Main extends Application {
 
         Label labelTop = new Label("Booking Table");
         Button buttonAdd = new Button("Add");
+        buttonAdd.setOnAction(event -> {
+            form.setBooking(null);
+            form.show();
+        });
         Button buttonResearch1 = new Button("Research 1");
+        buttonResearch1.setOnAction(event -> {
+            search1.show();
+        });
         Button buttonResearch2 = new Button("Research 2");
+        buttonResearch2.setOnAction(event -> {
+            search2.show();
+        });
         Button buttonResearch3 = new Button("Research 3");
+        buttonResearch3.setOnAction(event -> {
+            search3.show();
+        });
         HBox hBoxTop = new HBox(labelTop, buttonAdd, buttonResearch1, buttonResearch2, buttonResearch3);
 
         int nbRows = 10;
@@ -57,15 +70,5 @@ public class Main extends Application {
         //vBox.setAlignment(Pos.CENTER);
         primaryStage.setScene(scene);
         primaryStage.show();
-        BookingController bookingController = new BookingController(bookingManager);
-        Form form = new Form(primaryStage, bookingController);
-        try {
-            ArrayList<Booking> bookings = bookingManager.getBookings();
-//            form.setBooking(bookings.get(0));
-//            form.setUpdate(true);
-            form.show();
-        } catch (GetBookingsException e) {
-            e.printStackTrace();
-        }
     }
 }

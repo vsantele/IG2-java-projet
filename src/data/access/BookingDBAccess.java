@@ -306,8 +306,7 @@ public class BookingDBAccess implements BookingDataAccess {
         String charityCode = data.getString("charity_code");
         Integer sessionId = data.getInt("session_id");
   
-        Booking booking = null;
-        booking = new Booking(bookingId, lastName, firstName, amount, isPaid, phone, birthdate, email, date, charityCode, sessionId);
+        Booking booking = new Booking(bookingId, lastName, firstName, amount, isPaid, phone, birthdate, email, date, charityCode, sessionId);
         bookings.add(booking);
       }
     } catch (SQLException | InvalidBookingException e) {
@@ -451,13 +450,13 @@ public class BookingDBAccess implements BookingDataAccess {
     return resultList;
   }
   
-  public ArrayList<String> getCharityAtHour(LocalTime time) throws GetCharityAtHourException {
-    String sql = "SELECT c.name FROM charity c " +
+  public ArrayList<Charity> getCharityAtHour(LocalTime time) throws GetCharityAtHourException {
+    String sql = "SELECT c.charity_code, c.name, c.contact, c.address, c.city, c.zip_code, c.country FROM charity c " +
             "JOIN booking b ON c.charity_code = b.charity_code " +
             "JOIN session s ON b.session_id = s.session_id " +
             "WHERE ? BETWEEN s.start_hour AND s.end_hour " +
             "GROUP BY c.name;";
-    ArrayList<String> resultList = new ArrayList<>();
+    ArrayList<Charity> resultList = new ArrayList<>();
     try {
       PreparedStatement req = connection.prepareStatement(sql);
     
@@ -466,7 +465,15 @@ public class BookingDBAccess implements BookingDataAccess {
       ResultSet data = req.executeQuery();
       
       while (data.next()) {
-        resultList.add(data.getString("name"));
+        String charityCode = data.getString("charity_code");
+        String name = data.getString("name");
+        String contact = data.getString("contact");
+        String address = data.getString("address");
+        String city = data.getString("city");
+        String zipCode = data.getString("zip_code");
+        String country = data.getString("country");
+        
+        resultList.add(new Charity(charityCode, name, contact, address, city, zipCode, country));
       }
       
     } catch (SQLException e) {

@@ -26,7 +26,6 @@ import view.component.CharityCell;
 import view.component.DateCell;
 import view.component.SessionCell;
 
-import java.awt.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -119,6 +118,7 @@ public class Form extends Stage{
           sessionPicker.setItems(FXCollections.observableArrayList(sessions));
           sessionPicker.setDisable(false);
         } else {
+          sessionPicker.getSelectionModel().select(null);
           sessionPicker.setDisable(true);
         }
         if (datePicker.getValue() != null) {
@@ -154,7 +154,9 @@ public class Form extends Stage{
     confirmBtn = new Button("Confirmer");
     confirmBtn.setOnAction(new ConfirmHandler());
     cancelBtn = new Button("Annuler");
-    cancelBtn.setOnAction(event -> Toolkit.getDefaultToolkit().beep());
+    cancelBtn.setOnAction(event -> {
+      hide();
+    });
     
     infoAlert = new Alert(Alert.AlertType.INFORMATION);
     errorAlert = new Alert(Alert.AlertType.ERROR);
@@ -193,40 +195,52 @@ public class Form extends Stage{
   
   public void setBooking(Booking booking) {
     this.booking = booking;
-    firstnameTextField.setText(booking.getFirstname());
-    lastnameTextField.setText(booking.getLastname());
-    phoneTextField.setText(booking.getPhone());
-    emailTextField.setText(booking.getEmail());
-    birthdatePicker.setValue(booking.getBirthdate());
-    amountTextField.setText(booking.getAmount().toString());
-    
-    if (booking.isPaid()) {
+    if (booking == null) {
+      firstnameTextField.setText(null);
+      lastnameTextField.setText(null);
+      phoneTextField.setText(null);
+      emailTextField.setText(null);
+      birthdatePicker.setValue(null);
+      amountTextField.setText(null);
       isPaidYes.setSelected(true);
+      charityPicker.getSelectionModel().select(null);
+      activityPicker.getSelectionModel().select(null);
     } else {
-      isPaidNo.setSelected(true);
-    }
-    
-    try {
-      Charity charity = booking.getCharity();
-      if (charity == null) {
-        charity = controller.getCharity(booking.getCharityCode());
-      }
-      charityPicker.getSelectionModel().select(charity);
+      firstnameTextField.setText(booking.getFirstname());
+      lastnameTextField.setText(booking.getLastname());
+      phoneTextField.setText(booking.getPhone());
+      emailTextField.setText(booking.getEmail());
+      birthdatePicker.setValue(booking.getBirthdate());
+      amountTextField.setText(booking.getAmount().toString());
       
-    } catch (GetCharityException e) {
-      e.printStackTrace();
+      if (booking.isPaid()) {
+        isPaidYes.setSelected(true);
+      } else {
+        isPaidNo.setSelected(true);
+      }
+      
+      try {
+        Charity charity = booking.getCharity();
+        if (charity == null) {
+          charity = controller.getCharity(booking.getCharityCode());
+        }
+        charityPicker.getSelectionModel().select(charity);
+        
+      } catch (GetCharityException e) {
+        e.printStackTrace();
+      }
+      
+      try {
+        Activity activity = controller.getActivity(booking.getSessionId());
+        activityPicker.getSelectionModel().select(activity);
+      } catch (GetActivityException e) {
+        e.printStackTrace();
+      }
+      
+      sessionPicker.getSelectionModel().select(new Session(booking.getSessionId()));
+      
+      datePicker.getSelectionModel().select(booking.getDate());
     }
-    
-    try {
-      Activity activity = controller.getActivity(booking.getSessionId());
-      activityPicker.getSelectionModel().select(activity);
-    } catch (GetActivityException e) {
-      e.printStackTrace();
-    }
-    
-    sessionPicker.getSelectionModel().select(new Session(booking.getSessionId()));
-    
-    datePicker.getSelectionModel().select(booking.getDate());
   }
   
   public void setUpdate(Boolean update) {
@@ -241,7 +255,7 @@ public class Form extends Stage{
       String phone = phoneTextField.getText();
       String email = emailTextField.getText();
       LocalDate birthdate = birthdatePicker.getValue();
-      Double amount = null;
+      Double amount;
       try {
         amount = Double.parseDouble(amountTextField.getText());
       } catch ( NumberFormatException e ) {
