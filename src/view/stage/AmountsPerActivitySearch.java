@@ -24,7 +24,7 @@ import view.component.CharityCell;
 
 import java.util.ArrayList;
 
-public class Search1 extends Stage {
+public class AmountsPerActivitySearch extends Stage {
   private Scene scene;
   private BorderPane pane;
   private HBox top;
@@ -32,7 +32,7 @@ public class Search1 extends Stage {
   private TableView<AmountActivity> center;
   private BookingController controller;
   
-  public Search1(Stage primaryStage, BookingController controller) {
+  public AmountsPerActivitySearch(Stage primaryStage, BookingController controller) {
     this.controller = controller;
     pane = new BorderPane();
     scene = new Scene(pane);
@@ -79,7 +79,7 @@ public class Search1 extends Stage {
     
     this.initModality(Modality.APPLICATION_MODAL);
     this.initOwner(primaryStage);
-    this.setTitle("Recherche");
+    this.setTitle("Recettes par activité");
     this.setScene(scene);
     this.setWidth(300);
     this.setHeight(500);

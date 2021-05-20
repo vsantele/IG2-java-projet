@@ -25,7 +25,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
-public class Search3 extends Stage {
+public class CharityAtHourSearch extends Stage {
   private Scene scene;
   private BorderPane pane;
   private HBox top;
@@ -41,7 +41,7 @@ public class Search3 extends Stage {
   
   private Alert errorAlert;
   
-  public Search3(Stage primaryStage, BookingController controller) {
+  public CharityAtHourSearch(Stage primaryStage, BookingController controller) {
     this.controller = controller;
     pane = new BorderPane();
     scene = new Scene(pane);
@@ -128,7 +128,7 @@ public class Search3 extends Stage {
     
     this.initModality(Modality.APPLICATION_MODAL);
     this.initOwner(primaryStage);
-    this.setTitle("Recherche");
+    this.setTitle("Association pour une heure et date");
     this.setScene(scene);
     this.setHeight(600);
     this.setWidth(800);

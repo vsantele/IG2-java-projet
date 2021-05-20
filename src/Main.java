@@ -5,7 +5,6 @@ import exception.data.GetBookingsException;
 import javafx.application.Application;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -13,13 +12,11 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import model.Booking;
-import view.component.table.EditCell;
 import view.stage.Form;
-import view.stage.Search1;
-import view.stage.Search2;
-import view.stage.Search3;
+import view.stage.AmountsPerActivitySearch;
+import view.stage.PeoplePerActivityAndCharitySearch;
+import view.stage.CharityAtHourSearch;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -34,14 +31,14 @@ public class Main extends Application {
     private Scene scene;
     
     private Form form;
-    private Search1 search1;
-    private Search2 search2;
-    private Search3 search3;
+    private AmountsPerActivitySearch amountsPerActivitySearch;
+    private PeoplePerActivityAndCharitySearch peoplePerActivityAndCharitySearch;
+    private CharityAtHourSearch charityAtHourSearch;
     
-    private Button buttonAdd;
-    private Button buttonResearch1;
-    private Button buttonResearch2;
-    private Button buttonResearch3;
+    private Button addBtn;
+    private Button amountsPerActivitySearchBtn;
+    private Button peoplePerActivityAndCharitySearchBtn;
+    private Button charityAtHourSearchBtn;
     
     private Alert choiceAlert;
     private Alert confirmAlert;
@@ -69,9 +66,9 @@ public class Main extends Application {
         bookingManager = new BookingManager();
         bookingController = new BookingController(bookingManager);
         form = new Form(primaryStage, bookingController);
-        search1 = new Search1(primaryStage, bookingController);
-        search2 = new Search2(primaryStage, bookingController);
-        search3 = new Search3(primaryStage, bookingController);
+        amountsPerActivitySearch = new AmountsPerActivitySearch(primaryStage, bookingController);
+        peoplePerActivityAndCharitySearch = new PeoplePerActivityAndCharitySearch(primaryStage, bookingController);
+        charityAtHourSearch = new CharityAtHourSearch(primaryStage, bookingController);
         
         infoAlert = new Alert(Alert.AlertType.INFORMATION);
         infoAlert.setTitle("Information");
@@ -84,7 +81,6 @@ public class Main extends Application {
         deleteBtn = new ButtonType("Supprimer");
         cancelBtn = new ButtonType("Annuler");
         
-//        choiceAlert.getButtonTypes().clear();
         choiceAlert.getButtonTypes().setAll(editBtn, deleteBtn, cancelBtn);
         
         confirmAlert = new Alert(Alert.AlertType.WARNING);
@@ -101,26 +97,26 @@ public class Main extends Application {
         primaryStage.setWidth(1200);
         primaryStage.setHeight(500);
         
-        buttonAdd = new Button("Ajouter Réservation");
-        buttonAdd.setOnAction(event -> {
+        addBtn = new Button("Ajouter Réservation");
+        addBtn.setOnAction(event -> {
             form.setBooking(null);
             form.showAndWait();
             getBookings();
             
         });
-        buttonResearch1 = new Button("Recherche 1");
-        buttonResearch1.setOnAction(event -> {
-            search1.show();
+        amountsPerActivitySearchBtn = new Button("Recettes par activité");
+        amountsPerActivitySearchBtn.setOnAction(event -> {
+            amountsPerActivitySearch.show();
         });
-        buttonResearch2 = new Button("Recherche 2");
-        buttonResearch2.setOnAction(event -> {
-            search2.show();
+        peoplePerActivityAndCharitySearchBtn = new Button("Réservation pour activité et Association");
+        peoplePerActivityAndCharitySearchBtn.setOnAction(event -> {
+            peoplePerActivityAndCharitySearch.show();
         });
-        buttonResearch3 = new Button("Recherche 3");
-        buttonResearch3.setOnAction(event -> {
-            search3.show();
+        charityAtHourSearchBtn = new Button("Association pour une heure et date");
+        charityAtHourSearchBtn.setOnAction(event -> {
+            charityAtHourSearch.show();
         });
-        hBoxTop = new HBox(30, buttonAdd, buttonResearch1, buttonResearch2, buttonResearch3);
+        hBoxTop = new HBox(30, addBtn, amountsPerActivitySearchBtn, peoplePerActivityAndCharitySearchBtn, charityAtHourSearchBtn);
         hBoxTop.setPadding(new Insets(15, 12, 15, 12));
         hBoxTop.setStyle("-fx-background-color: #336699;");
         pane.setTop(hBoxTop);
