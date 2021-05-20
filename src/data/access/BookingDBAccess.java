@@ -82,16 +82,16 @@ public class BookingDBAccess implements BookingDataAccess {
       req.setString(5, booking.getPhone());
   
       if (booking.getBirthdate() == null) {
+        req.setNull(6, Types.DATE);
+      } else {
         java.sql.Date sqlBirthDate = Utils.toSqlDate(booking.getBirthdate());
         req.setDate(6, sqlBirthDate);
-      } else {
-        req.setNull(6, Types.DATE);
       }
   
       if (booking.getEmail() == null) {
-        req.setString(7, booking.getEmail());
-      } else {
         req.setNull(7, Types.VARCHAR);
+      } else {
+        req.setString(7, booking.getEmail());
       }
   
       java.sql.Date sqlDate = Utils.toSqlDate(booking.getDate());
@@ -286,7 +286,7 @@ public class BookingDBAccess implements BookingDataAccess {
             "JOIN charity c ON b.charity_code = c.charity_code " +
             "JOIN session s ON b.session_id = s.session_id " +
             "JOIN activity a on s.activity_code = a.activity_code " +
-            "GROUP BY a.activity_code, s.num_day, s.start_hour, b.date;";
+            "ORDER BY a.title, s.num_day, s.start_hour, b.date, b.lastname, b.firstname;";
   
     try {
       PreparedStatement req = connection.prepareStatement(sql);
@@ -326,7 +326,7 @@ public class BookingDBAccess implements BookingDataAccess {
         Session session = new Session(sessionId, numDay, startHour, endHour, isWeekly, nbMax, activity);
         
   
-        Booking booking = new Booking(bookingId, lastName, firstName, amount, isPaid, phone, birthdate, email, date, charity, session );
+        Booking booking = new Booking(bookingId, firstName, lastName, amount, isPaid, phone, birthdate, email, date, charity, session );
         bookings.add(booking);
       }
     } catch (SQLException | InvalidBookingException | SessionNumDayException e) {
@@ -338,8 +338,9 @@ public class BookingDBAccess implements BookingDataAccess {
   
   public ArrayList<Booking> getBookings(Session session, LocalDate date) throws GetBookingsException {
     ArrayList<Booking> bookings = new ArrayList<>();
-    String sql = "SELECT booking_id, lastname, firstname, amount, is_paid, phone, birthdate, email, charity_code " +
-            "FROM booking " +
+    String sql = "SELECT b.booking_id, b.lastname, b.firstname, b.amount, b.is_paid, b.phone, b.birthdate, b.email, c.charity_code , c.name " +
+            "FROM booking b " +
+            "JOIN charity c ON b.charity_code = c.charity_code " +
             "WHERE session_id = ? AND date = ?;";
   
     try {
@@ -351,21 +352,27 @@ public class BookingDBAccess implements BookingDataAccess {
       ResultSet data = req.executeQuery();
       
       while (data.next()) {
-        Integer bookingId = data.getInt("booking_id");
-        String lastName = data.getString("lastname");
-        String firstName = data.getString("firstname");
-        Double amount = data.getDouble("amount");
-        Boolean isPaid = data.getBoolean("is_paid");
-        String phone = data.getString("phone");
-        java.sql.Date sqlBirthDate = data.getDate("birthdate");
+        Integer bookingId = data.getInt("b.booking_id");
+        String lastName = data.getString("b.lastname");
+        String firstName = data.getString("b.firstname");
+        Double amount = data.getDouble("b.amount");
+        Boolean isPaid = data.getBoolean("b.is_paid");
+        String phone = data.getString("b.phone");
+        java.sql.Date sqlBirthDate = data.getDate("b.birthdate");
         LocalDate birthdate = null;
         if (sqlBirthDate != null) {
           birthdate = sqlBirthDate.toLocalDate();
         }
-        String email = data.getString("email");
-        String charityCode = data.getString("charity_code");
+        String email = data.getString("b.email");
+        
+        String charityCode = data.getString("c.charity_code");
+        String charityName = data.getString("c.name");
+        
+        Charity charity = new Charity(charityCode, charityName);
+        
+        
   
-        Booking booking = new Booking(bookingId, lastName, firstName, amount, isPaid, phone, birthdate, email, date, charityCode, session.getId());
+        Booking booking = new Booking(bookingId, lastName, firstName, amount, isPaid, phone, birthdate, email, date, charity, session);
         bookings.add(booking);
       }
     } catch (SQLException | InvalidBookingException e) {
@@ -405,7 +412,8 @@ public class BookingDBAccess implements BookingDataAccess {
             "FROM booking b " +
             "JOIN session s ON b.session_id = s.session_id " +
             "JOIN activity a ON s.activity_code = a.activity_code " +
-            "WHERE b.charity_code = ?;";
+            "WHERE b.charity_code = ? " +
+            "GROUP BY a.title;";
     ArrayList<AmountActivity> resultList = new ArrayList<>();
     try {
       PreparedStatement req = connection.prepareStatement(sql);

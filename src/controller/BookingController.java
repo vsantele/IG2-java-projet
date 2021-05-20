@@ -46,6 +46,10 @@ public class BookingController {
     return bookingManager.updateBooking(booking);
   }
   
+  public int deleteBooking(Booking booking) throws DeleteBookingException {
+    return bookingManager.deleteBooking(booking);
+  }
+  
   public ArrayList<AmountActivity> getAmountsPerActivity(Charity charity) throws GetAmountsPerActivityException {
     return bookingManager.getAmountsPerActivity(charity);
   }

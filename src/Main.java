@@ -1,9 +1,11 @@
 import business.BookingManager;
 import controller.BookingController;
+import exception.data.DeleteBookingException;
 import exception.data.GetBookingsException;
 import javafx.application.Application;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -11,7 +13,9 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import model.Booking;
+import view.component.table.EditCell;
 import view.stage.Form;
 import view.stage.Search1;
 import view.stage.Search2;
@@ -21,6 +25,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class Main extends Application {
     private BookingManager bookingManager;
@@ -37,6 +42,18 @@ public class Main extends Application {
     private Button buttonResearch1;
     private Button buttonResearch2;
     private Button buttonResearch3;
+    
+    private Alert choiceAlert;
+    private Alert confirmAlert;
+    private Alert errorAlert;
+    private Alert infoAlert;
+    
+    private ButtonType editBtn;
+    private ButtonType deleteBtn;
+    private ButtonType cancelBtn;
+    private ButtonType yesBtn;
+    private ButtonType noBtn;
+    
     private HBox hBoxTop;
     private TableView<Booking> center;
     
@@ -55,6 +72,29 @@ public class Main extends Application {
         search1 = new Search1(primaryStage, bookingController);
         search2 = new Search2(primaryStage, bookingController);
         search3 = new Search3(primaryStage, bookingController);
+        
+        infoAlert = new Alert(Alert.AlertType.INFORMATION);
+        infoAlert.setTitle("Information");
+        
+        choiceAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        choiceAlert.setTitle("Editer ou Supprimer");
+        choiceAlert.setHeaderText("Quelle action voulez-vous effectuer?");
+        
+        editBtn = new ButtonType("Editer");
+        deleteBtn = new ButtonType("Supprimer");
+        cancelBtn = new ButtonType("Annuler");
+        
+//        choiceAlert.getButtonTypes().clear();
+        choiceAlert.getButtonTypes().setAll(editBtn, deleteBtn, cancelBtn);
+        
+        confirmAlert = new Alert(Alert.AlertType.WARNING);
+        confirmAlert.setTitle("Confirmation");
+        
+        yesBtn = new ButtonType("Oui");
+        noBtn = new ButtonType("Non");
+        
+        confirmAlert.getButtonTypes().setAll(yesBtn, noBtn);
+        
         
         primaryStage.setTitle("Application");
         primaryStage.centerOnScreen();
@@ -86,6 +126,45 @@ public class Main extends Application {
         pane.setTop(hBoxTop);
         
         center = new TableView<>();
+        
+        center.setRowFactory(tv -> {
+            TableRow<Booking> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() >= 2 && ! row.isEmpty()) {
+                    Booking booking = row.getItem();
+                    if (booking.getDate().isBefore(LocalDate.now())) {
+                        infoAlert.setHeaderText("Trop tard");
+                        infoAlert.setContentText("Vous ne pouvez pas modifier une réservation pour une date déjà passée");
+                        infoAlert.show();
+                    }else {
+                        
+                        
+                        Optional<ButtonType> choice = choiceAlert.showAndWait();
+                        if(choice.get() == editBtn) {
+                            form.setBooking(booking);
+                            form.setUpdate(true);
+                            form.showAndWait();
+                            center.refresh();
+                        } else if (choice.get() == deleteBtn) {
+                            try {
+                                Optional<ButtonType> confirm = confirmAlert.showAndWait();
+                                if (confirm.get() == yesBtn) {
+                                    bookingController.deleteBooking(booking);
+                                    getBookings();
+                                }
+                            } catch (DeleteBookingException e) {
+                                errorAlert.setTitle("Erreur");
+                                errorAlert.setHeaderText(null);
+                                errorAlert.setContentText(e.getMessage());
+                                errorAlert.show();
+                            }
+                        }
+                    }
+                }
+            });
+            return row;
+        });
+        
         TableColumn<Booking, String> firstnameCol = new TableColumn<>("Prénom");
         firstnameCol.setCellValueFactory(new PropertyValueFactory<>("firstname"));
         TableColumn<Booking, String> lastnameCol = new TableColumn<>("Nom");
@@ -94,7 +173,14 @@ public class Main extends Application {
         TableColumn<Booking, String> phoneCol = new TableColumn<>("Téléphone");
         phoneCol.setCellValueFactory(new PropertyValueFactory<>("phone"));
         TableColumn<Booking, String> birthdateCol = new TableColumn<>("Date de Naissance");
-        birthdateCol.setCellValueFactory(new PropertyValueFactory<>("birthday"));
+        birthdateCol.setCellValueFactory(cellData -> {
+            LocalDate birthdate = cellData.getValue().getBirthdate();
+            if (birthdate != null) {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd LLLL yyyy");
+                return new SimpleStringProperty(birthdate.format(formatter));
+            }
+            return new SimpleStringProperty("");
+        });
         TableColumn<Booking, String> emailCol = new TableColumn<>("Email");
         emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
         TableColumn<Booking, String> amountCol = new TableColumn<>("Montant");
@@ -133,7 +219,7 @@ public class Main extends Application {
             return new SimpleStringProperty(title);
         });
         
-        center.getColumns().setAll(firstnameCol, lastnameCol, phoneCol, emailCol,amountCol, isPaidCol, charityCol, dateCol, sessionCol, activityCol);
+        center.getColumns().setAll(firstnameCol, lastnameCol, phoneCol, birthdateCol, emailCol,amountCol, isPaidCol, charityCol, dateCol, sessionCol, activityCol);
         pane.setCenter(center);
         
         getBookings();
@@ -146,7 +232,6 @@ public class Main extends Application {
     
     void getBookings() {
         try {
-            System.out.println("Hello");
             ArrayList<Booking> charities = bookingController.getBookings();
             center.setItems(FXCollections.observableArrayList(charities));
         } catch (GetBookingsException e) {

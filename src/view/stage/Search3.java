@@ -39,15 +39,15 @@ public class Search3 extends Stage {
   private TableView<Charity> center;
   private BookingController controller;
   
-  private Integer selectedHour;
-  private Integer selectedMinute;
-  private LocalDate selectedStartDate;
-  private LocalDate selectedEndDate;
+  private Alert errorAlert;
   
   public Search3(Stage primaryStage, BookingController controller) {
     this.controller = controller;
     pane = new BorderPane();
     scene = new Scene(pane);
+    
+    errorAlert = new Alert(Alert.AlertType.ERROR);
+    errorAlert.setTitle("Erreur");
   
     hourPicker = new ComboBox<>();
     ArrayList<Integer> hours = new ArrayList<>();
@@ -55,9 +55,6 @@ public class Search3 extends Stage {
       hours.add(hour);
     }
     hourPicker.setItems(FXCollections.observableArrayList(hours));
-    hourPicker.valueProperty().addListener(observable -> {
-      selectedHour = hourPicker.getValue();
-    });
     hourPicker.getSelectionModel().select(16);
   
     minutePicker = new ComboBox<>();
@@ -66,27 +63,55 @@ public class Search3 extends Stage {
       minutes.add(minute);
     }
     minutePicker.setItems(FXCollections.observableArrayList(minutes));
-    minutePicker.valueProperty().addListener(observable -> {
-      selectedMinute = minutePicker.getValue();
-    });
     minutePicker.getSelectionModel().select(0);
+    
+    startDatePicker = new DatePicker();
+    
+    endDatePicker = new DatePicker();
     
     submitBtn = new Button("Rechercher");
     submitBtn.setOnAction(event -> {
-      if (selectedHour != null && selectedMinute != null) {
-        LocalTime time = LocalTime.of(selectedHour, selectedMinute);
-        try {
-          ArrayList<Charity> results = controller.getCharityAtHour(time);
-          center.setItems(FXCollections.observableArrayList(results));
-        } catch (GetCharityAtHourException e) {
-          e.printStackTrace();
-        }
-      } else {
-        System.out.println("Champs manquant");
+      System.out.println("minutePicker.getValue() = " + minutePicker.getValue());
+      if (hourPicker.getValue() == null) {
+        errorAlert.setHeaderText("Heure non valide");
+        errorAlert.show();
+        return;
       }
+      if (minutePicker.getValue() == null) {
+        errorAlert.setHeaderText("Minute non valide");
+        errorAlert.show();
+        return;
+      }
+      if (startDatePicker.getValue() == null) {
+        errorAlert.setHeaderText("Date de début non valide");
+        errorAlert.show();
+        return;
+      }
+      if (endDatePicker.getValue() == null) {
+        errorAlert.setHeaderText("Date de fin non valide");
+        errorAlert.show();
+        return;
+      }
+      
+      if (endDatePicker.getValue().isBefore(startDatePicker.getValue())) {
+        errorAlert.setHeaderText("La date de fin doit être supérieur à la date de début");
+        errorAlert.show();
+        return;
+      }
+      
+      LocalTime time = LocalTime.of(hourPicker.getValue(), minutePicker.getValue());
+      try {
+        ArrayList<Charity> results = controller.getCharityAtHour(time);
+        center.setItems(FXCollections.observableArrayList(results));
+      } catch (GetCharityAtHourException e) {
+        errorAlert.setHeaderText("Erreur lors de la recherche");
+        errorAlert.setContentText(e.getMessage());
+        errorAlert.show();
+      }
+      
     });
     
-    top = new HBox(10, new Label("Heure: "), hourPicker, new Label(":"), minutePicker, submitBtn);
+    top = new HBox(10, new Label("Heure: "), hourPicker, new Label(":"), minutePicker, new Label("Date de début: "), startDatePicker, new Label("Date de fin: "), endDatePicker, submitBtn);
     pane.setTop(top);
     
     center = new TableView<>();
@@ -106,6 +131,6 @@ public class Search3 extends Stage {
     this.setTitle("Recherche");
     this.setScene(scene);
     this.setHeight(600);
-    this.setWidth(350);
+    this.setWidth(800);
   }
 }

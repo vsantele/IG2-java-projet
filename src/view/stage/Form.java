@@ -77,11 +77,16 @@ public class Form extends Stage{
     isUpdate = false;
 
     firstnameTextField = new TextField();
+    firstnameTextField.setPromptText("John");
     lastnameTextField = new TextField();
+    lastnameTextField.setPromptText("Doe");
     phoneTextField = new TextField();
+    phoneTextField.setPromptText("0124/56.78.90");
     emailTextField = new TextField();
+    emailTextField.setPromptText("john.doe@email.com");
     birthdatePicker = new DatePicker();
     amountTextField = new TextField();
+    amountTextField.setPromptText("10");
     amountTextField.setTextFormatter(new TextFormatter<>(new NumberStringConverter()));
     isPaidYes = new RadioButton("Oui");
     isPaidNo = new RadioButton("Non");
@@ -163,27 +168,27 @@ public class Form extends Stage{
     infoAlert = new Alert(Alert.AlertType.INFORMATION);
     errorAlert = new Alert(Alert.AlertType.ERROR);
     
-    grid.add(new Label("Prénom: "), 0,0);
+    grid.add(new Label("Prénom * "), 0,0);
     grid.add(firstnameTextField, 1,0);
-    grid.add(new Label("Nom: "), 0,1);
+    grid.add(new Label("Nom * "), 0,1);
     grid.add(lastnameTextField, 1,1);
-    grid.add(new Label("Téléphone: "), 0,2);
+    grid.add(new Label("Téléphone * "), 0,2);
     grid.add(phoneTextField, 1,2);
-    grid.add(new Label("Email: : "), 0,3);
+    grid.add(new Label("Email "), 0,3);
     grid.add(emailTextField, 1,3);
-    grid.add(new Label("Date de Naissance: "), 0,4);
+    grid.add(new Label("Date de Naissance "), 0,4);
     grid.add(birthdatePicker, 1, 4);
-    grid.add(new Label("Montant: "), 0,5);
+    grid.add(new Label("Montant * "), 0,5);
     grid.add(amountTextField,1,5);
-    grid.add(new Label("Déjà payé: "), 0,6);
+    grid.add(new Label("Déjà payé * "), 0,6);
     grid.add(isPaidBox, 1,6);
-    grid.add(new Label("Association: "), 0,7);
+    grid.add(new Label("Association * "), 0,7);
     grid.add(charityPicker,1,7);
-    grid.add(new Label("Activité: "), 0,8);
+    grid.add(new Label("Activité * "), 0,8);
     grid.add(activityPicker, 1,8);
-    grid.add(new Label("Session: "), 0,9);
+    grid.add(new Label("Session * "), 0,9);
     grid.add(sessionPicker, 1,9);
-    grid.add(new Label("Date: "),0,10);
+    grid.add(new Label("Date * "),0,10);
     grid.add(datePicker, 1,10);
     grid.add(confirmBtn, 0,11);
     grid.add(cancelBtn, 1,11);
@@ -261,7 +266,8 @@ public class Form extends Stage{
       LocalDate birthdate = birthdatePicker.getValue();
       Double amount;
       try {
-        amount = Double.parseDouble(amountTextField.getText());
+        if (amountTextField.getText() == null) amount = null;
+        else amount = Double.parseDouble(amountTextField.getText());
       } catch ( NumberFormatException e ) {
         System.out.println("Mauvais nombre");
         errorAlert.setTitle("Montant non valide");
@@ -301,12 +307,12 @@ public class Form extends Stage{
               infoAlert.setTitle("Succès");
               infoAlert.setHeaderText(null);
               infoAlert.setContentText("Réservation modifiée avec succès");
-              infoAlert.showAndWait();
+              infoAlert.show();
             } else {
               errorAlert.setTitle("Erreur");
               errorAlert.setHeaderText(null);
               errorAlert.setContentText("La séance est pleine. Veuillez en sélectionner une autre");
-              errorAlert.showAndWait();
+              errorAlert.show();
             }
           }
         } else {
@@ -317,19 +323,19 @@ public class Form extends Stage{
             infoAlert.setTitle("Succès");
             infoAlert.setHeaderText(null);
             infoAlert.setContentText("Réservation ajoutée avec succès");
-            infoAlert.showAndWait();
+            infoAlert.show();
           } else {
             errorAlert.setTitle("Erreur");
             errorAlert.setHeaderText(null);
             errorAlert.setContentText("La séance est pleine. Veuillez en sélectionner une autre");
-            errorAlert.showAndWait();
+            errorAlert.show();
           }
         }
       } catch (InvalidBookingException e) {
         errorAlert.setTitle("Erreur");
         errorAlert.setHeaderText(null);
         errorAlert.setContentText(e.getMessage());
-        errorAlert.showAndWait();
+        errorAlert.show();
       }
       catch (UpdateBookingException | AddBookingException e) {
         e.printStackTrace();
