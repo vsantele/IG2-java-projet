@@ -23,8 +23,8 @@ public class Booking {
 
   public Booking(Integer id, String firstname, String lastname,  Double amount, Boolean isPaid, String phone, LocalDate birthdate, String email, LocalDate date, Charity charity, Session session) throws InvalidBookingException {
     setId(id);
-    setLastname(lastname);
     setFirstname(firstname);
+    setLastname(lastname);
     setAmount(amount);
     setPaid(isPaid);
     setPhone(phone);
@@ -36,7 +36,7 @@ public class Booking {
     
 //    if (getCharityCode() == null) throw new InvalidBookingException("association");
   }
-  
+
   public Booking(Integer id,  String firstname, String lastname, Double amount, Boolean isPaid, String phone, LocalDate birthdate, String email, LocalDate date, String charityCode, Integer sessionId) throws InvalidBookingException {
     this(id, firstname, lastname, amount, isPaid, phone, birthdate, email, date, (Charity) null,  (Session) null);
     this.setCharityCode(charityCode);
@@ -83,7 +83,9 @@ public class Booking {
     this.birthdate = birthdate;
   }
   
-  public void setEmail(String email) {
+  public void setEmail(String email) throws InvalidBookingException {
+    if (email != null && email.equals("")) email = null;
+    if (email != null && !Utils.isEmailValid(email)) throw new InvalidBookingException("email");
     this.email = email;
   }
   
