@@ -70,6 +70,8 @@ public class Session {
     return endHour;
   }
   
+  public Activity getActivity() { return activity; }
+  
   @Override
   public String toString() {
     return "Session{" +

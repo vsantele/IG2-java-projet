@@ -39,27 +39,11 @@ public class BookingController {
   }
   
   public Boolean addBooking(Booking booking) throws AddBookingException {
-    try {
-      if (!bookingManager.isSessionFull(booking.getSession(), booking.getDate())) {
-        bookingManager.addBooking(booking);
-        return true;
-      }
-    } catch (IsSessionFullException e) {
-      throw new AddBookingException(e.getMessage());
-    }
-    return false;
+    return bookingManager.addBooking(booking);
   }
   
   public Boolean updateBooking(Booking booking) throws UpdateBookingException {
-    try {
-      if (!bookingManager.isSessionFull(booking.getSession(),booking.getDate())) {
-        bookingManager.updateBooking(booking);
-        return true;
-      }
-    } catch (IsSessionFullException e) {
-      throw new UpdateBookingException(e.getMessage());
-    }
-    return false;
+    return bookingManager.updateBooking(booking);
   }
   
   public ArrayList<AmountActivity> getAmountsPerActivity(Charity charity) throws GetAmountsPerActivityException {
@@ -72,5 +56,9 @@ public class BookingController {
   
   public ArrayList<Charity> getCharityAtHour(LocalTime time) throws GetCharityAtHourException {
     return bookingManager.getCharityAtHour(time);
+  }
+  
+  public ArrayList<Booking> getBookings() throws GetBookingsException {
+    return bookingManager.getBookings();
   }
 }

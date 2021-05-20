@@ -6,6 +6,7 @@ import exception.data.GetCharityAtHourException;
 import exception.data.GetCharityException;
 import exception.data.GetPeoplePerActivityAndCharityException;
 import javafx.collections.FXCollections;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -97,11 +98,14 @@ public class Search3 extends Stage {
     center.getColumns().add(charityCol);
     center.getColumns().add(contactCol);
     
+    pane.setPadding(new Insets(15, 12, 15, 12));
     pane.setCenter(center);
     
     this.initModality(Modality.APPLICATION_MODAL);
     this.initOwner(primaryStage);
     this.setTitle("Recherche");
     this.setScene(scene);
+    this.setHeight(600);
+    this.setWidth(350);
   }
 }

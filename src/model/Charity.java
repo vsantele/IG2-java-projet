@@ -24,7 +24,11 @@ public class Charity {
   public  Charity(String code) {
     this.code = code;
   }
-
+  
+  public Charity(String code, String name) {
+    this(code, name, null, null, null, null, null);
+  }
+  
   public String getCode() {
     return code;
   }

@@ -282,7 +282,11 @@ public class BookingDBAccess implements BookingDataAccess {
   
   public ArrayList<Booking> getBookings() throws GetBookingsException {
     ArrayList<Booking> bookings = new ArrayList<>();
-    String sql = "SELECT booking_id, lastname, firstname, amount, is_paid, phone, birthdate, email, date, charity_code, session_id FROM booking;";
+    String sql = "SELECT b.booking_id, b.lastname, b.firstname, b.amount, b.is_paid, b.phone, b.birthdate, b.email, b.date, c.charity_code, c.name, s.session_id, s.num_day, s.start_hour, s.end_hour, s.is_weekly, s.nb_max, a.activity_code, a.title FROM booking b " +
+            "JOIN charity c ON b.charity_code = c.charity_code " +
+            "JOIN session s ON b.session_id = s.session_id " +
+            "JOIN activity a on s.activity_code = a.activity_code " +
+            "GROUP BY a.activity_code, s.num_day, s.start_hour, b.date;";
   
     try {
       PreparedStatement req = connection.prepareStatement(sql);
@@ -290,26 +294,42 @@ public class BookingDBAccess implements BookingDataAccess {
       ResultSet data = req.executeQuery();
       
       while(data.next()) {
-        Integer bookingId = data.getInt("booking_id");
-        String lastName = data.getString("lastname");
-        String firstName = data.getString("firstname");
-        Double amount = data.getDouble("amount");
-        Boolean isPaid = data.getBoolean("is_paid");
-        String phone = data.getString("phone");
-        java.sql.Date sqlBirthDate = data.getDate("birthdate");
+        Integer bookingId = data.getInt("b.booking_id");
+        String lastName = data.getString("b.lastname");
+        String firstName = data.getString("b.firstname");
+        Double amount = data.getDouble("b.amount");
+        Boolean isPaid = data.getBoolean("b.is_paid");
+        String phone = data.getString("b.phone");
+        java.sql.Date sqlBirthDate = data.getDate("b.birthdate");
         LocalDate birthdate = null;
         if (sqlBirthDate != null) {
           birthdate = sqlBirthDate.toLocalDate();
         }
-        String email = data.getString("email");
-        LocalDate date = data.getDate("date").toLocalDate();
-        String charityCode = data.getString("charity_code");
-        Integer sessionId = data.getInt("session_id");
+        String email = data.getString("b.email");
+        LocalDate date = data.getDate("b.date").toLocalDate();
+        
+        String charityCode = data.getString("c.charity_code");
+        String charityName = data.getString("c.name");
+        Charity charity = new Charity(charityCode, charityName);
   
-        Booking booking = new Booking(bookingId, lastName, firstName, amount, isPaid, phone, birthdate, email, date, charityCode, sessionId);
+        String activityCode = data.getString("a.activity_code");
+        String activityTitle = data.getString("a.title");
+        Activity activity = new Activity(activityCode, activityTitle);
+        
+        Integer sessionId = data.getInt("s.session_id");
+        Integer numDay = data.getInt("s.num_day");
+        LocalTime startHour = data.getTime("s.start_hour").toLocalTime();
+        LocalTime endHour = data.getTime("s.end_hour").toLocalTime();
+        Boolean isWeekly = data.getBoolean("s.is_weekly");
+        Integer nbMax = data.getInt("s.nb_max");
+        
+        Session session = new Session(sessionId, numDay, startHour, endHour, isWeekly, nbMax, activity);
+        
+  
+        Booking booking = new Booking(bookingId, lastName, firstName, amount, isPaid, phone, birthdate, email, date, charity, session );
         bookings.add(booking);
       }
-    } catch (SQLException | InvalidBookingException e) {
+    } catch (SQLException | InvalidBookingException | SessionNumDayException e) {
       throw new GetBookingsException(e.getMessage());
     }
     

@@ -19,14 +19,29 @@ public class BookingManager {
     this.dao = dao;
   }
   
-  public Booking addBooking(Booking booking) throws AddBookingException {
-    int index = dao.addBooking(booking);
-    booking.setId(index);
-    return booking;
+  public Boolean addBooking(Booking booking) throws AddBookingException {
+    try {
+      if (!dao.isSessionFull(booking.getSession(), booking.getDate())) {
+        int index = dao.addBooking(booking);
+        booking.setId(index);
+        return true;
+      }
+    } catch (IsSessionFullException e) {
+      throw new AddBookingException(e.getMessage());
+    }
+    return false;
   }
   
-  public int updateBooking(Booking booking) throws UpdateBookingException {
-    return dao.updateBooking(booking);
+  public Boolean updateBooking(Booking booking) throws UpdateBookingException {
+    try {
+      if (!dao.isSessionFull(booking.getSession(),booking.getDate())) {
+        dao.updateBooking(booking);
+        return true;
+      }
+    } catch (IsSessionFullException e) {
+      throw new UpdateBookingException(e.getMessage());
+    }
+    return false;
   }
   
   public int deleteBooking(Booking booking) throws DeleteBookingException {

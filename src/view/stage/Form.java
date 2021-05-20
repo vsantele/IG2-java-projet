@@ -7,6 +7,7 @@ import exception.model.booking.InvalidBookingException;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
@@ -70,6 +71,7 @@ public class Form extends Stage{
     grid = new GridPane();
     grid.setVgap(10.0);
     grid.setHgap(5.0);
+    grid.setPadding(new Insets(0, 10, 0, 10));
     scene = new Scene(grid);
   
     isUpdate = false;
@@ -191,6 +193,8 @@ public class Form extends Stage{
     this.initOwner(primaryStage);
     this.setTitle("Formulaire");
     this.setScene(scene);
+    this.setWidth(350);
+    this.setHeight(450);
   }
   
   public void setBooking(Booking booking) {

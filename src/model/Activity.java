@@ -4,26 +4,26 @@ import java.util.Objects;
 
 public class Activity {
   private String code;
-  private String label;
+  private String title;
   
   public Activity(String code, String label) {
     this.code = code;
-    this.label = label;
+    this.title = label;
   }
 
   public String getCode() {
     return code;
   }
   
-  public String getLabel() {
-    return label;
+  public String getTitle() {
+    return title;
   }
   
   @Override
   public String toString() {
     return "Activity{" +
             "code='" + code + '\'' +
-            ", label='" + label + '\'' +
+            ", label='" + title + '\'' +
             '}';
   }
   

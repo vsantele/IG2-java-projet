@@ -6,6 +6,7 @@ import exception.data.GetAmountsPerActivityException;
 import exception.data.GetCharityException;
 import exception.data.GetPeoplePerActivityAndCharityException;
 import javafx.collections.FXCollections;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -82,6 +83,7 @@ public class Search2 extends Stage {
     });
     
     top = new HBox(10, new Label("Activté: "), activityPicker, new Label("Associations: "), charityPicker, submitBtn);
+    pane.setPadding(new Insets(15, 12, 15, 12));
     pane.setTop(top);
     
     center = new TableView<>();
@@ -104,9 +106,13 @@ public class Search2 extends Stage {
     
     pane.setCenter(center);
     
+    
     this.initModality(Modality.APPLICATION_MODAL);
     this.initOwner(primaryStage);
     this.setTitle("Recherche");
     this.setScene(scene);
+    this.setWidth(650);
+    this.setHeight(300);
+    
   }
 }

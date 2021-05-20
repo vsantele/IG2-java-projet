@@ -125,6 +125,10 @@ public class Booking {
   }
   
   public Boolean isPaid() {
+    return getIsPaid();
+  }
+  
+  public Boolean getIsPaid() {
     return isPaid;
   }
   
