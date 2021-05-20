@@ -23,22 +23,22 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class Main extends Application {
-    BookingManager bookingManager;
-    BookingController bookingController;
-    BorderPane pane;
-    Scene scene;
+    private BookingManager bookingManager;
+    private BookingController bookingController;
+    private BorderPane pane;
+    private Scene scene;
     
-    Form form;
-    Search1 search1;
-    Search2 search2;
-    Search3 search3;
+    private Form form;
+    private Search1 search1;
+    private Search2 search2;
+    private Search3 search3;
     
-    Button buttonAdd;
-    Button buttonResearch1;
-    Button buttonResearch2;
-    Button buttonResearch3;
-    HBox hBoxTop;
-    TableView<Booking> center;
+    private Button buttonAdd;
+    private Button buttonResearch1;
+    private Button buttonResearch2;
+    private Button buttonResearch3;
+    private HBox hBoxTop;
+    private TableView<Booking> center;
     
     public static void main(String[] args) {
         launch(args);
