@@ -121,7 +121,7 @@ public class BookingDBAccess implements BookingDataAccess {
     }
   }
   
-  public ArrayList<Date> getDates(Session session, LocalDate start, LocalDate end) throws GetDatesException {
+  public ArrayList<Date> getDates(Session session, LocalDate start, LocalDate end) throws GetException {
     ArrayList<Date> dates = new ArrayList<>();
     String sql = "SELECT date_id, date, type " +
             "FROM date " +
@@ -146,13 +146,13 @@ public class BookingDBAccess implements BookingDataAccess {
         dates.add(entryDate);
       }
     } catch (SQLException e) {
-      throw new GetDatesException(e.getMessage());
+      throw new GetException(e.getMessage());
     }
     
     return dates;
   }
   
-  public Activity getActivity(Integer session) throws GetActivityException {
+  public Activity getActivity(Integer session) throws GetException {
     String sql = "SELECT a.activity_code, a.title FROM activity a JOIN session s ON a.activity_code = s.activity_code WHERE s.session_id = ?;";
     
     Activity activity = null;
@@ -167,12 +167,12 @@ public class BookingDBAccess implements BookingDataAccess {
         activity = new Activity(data.getString("activity_code"), data.getString("title"));
       }
     } catch (SQLException e) {
-      throw new GetActivityException(e.getMessage());
+      throw new GetException(e.getMessage());
     }
     return activity;
   }
   
-  public ArrayList<Activity> getActivities() throws GetActivitiesException {
+  public ArrayList<Activity> getActivities() throws GetException {
     ArrayList<Activity> activities = new ArrayList<>();
     String sql = "SELECT activity_code, title FROM activity;";
     
@@ -189,13 +189,13 @@ public class BookingDBAccess implements BookingDataAccess {
         activities.add(activity);
       }
     } catch (SQLException e) {
-      throw new GetActivitiesException(e.getMessage());
+      throw new GetException(e.getMessage());
     }
     
     return activities;
   }
   
-  public ArrayList<Session> getSessions(Activity activity) throws GetSessionsException {
+  public ArrayList<Session> getSessions(Activity activity) throws GetException {
     ArrayList<Session> sessions = new ArrayList<>();
     String sql = "SELECT session_id, num_day, start_hour, end_hour, is_weekly, nb_max " +
             "FROM session " +
@@ -220,13 +220,13 @@ public class BookingDBAccess implements BookingDataAccess {
         sessions.add(session);
       }
     } catch (SQLException | SessionNumDayException e) {
-      throw new GetSessionsException(e.getMessage());
+      throw new GetException(e.getMessage());
     }
     
     return sessions;
   }
   
-  public Charity getCharity(String charityCode) throws GetCharityException {
+  public Charity getCharity(String charityCode) throws GetException {
     String sql = "SELECT name, contact, address, city, country, zip_code FROM charity WHERE charity_code = ?;";
   
     Charity charity = null;
@@ -247,12 +247,12 @@ public class BookingDBAccess implements BookingDataAccess {
         charity = new Charity(charityCode, name, contact, address, city, country, zipCode);
       }
     } catch (SQLException e) {
-      throw new GetCharityException(e.getMessage());
+      throw new GetException(e.getMessage());
     }
     return charity;
   }
   
-  public ArrayList<Charity> getCharities() throws GetCharityException{
+  public ArrayList<Charity> getCharities() throws GetException{
     ArrayList<Charity> charities = new ArrayList<>();
     String sql = "SELECT charity_code, name, contact, address, city, country, zip_code FROM charity;";
   
@@ -274,19 +274,19 @@ public class BookingDBAccess implements BookingDataAccess {
         charities.add(charity);
       }
     } catch (SQLException e) {
-      throw new GetCharityException(e.getMessage());
+      throw new GetException(e.getMessage());
     }
     
     return charities;
   }
   
-  public ArrayList<Booking> getBookings() throws GetBookingsException {
+  public ArrayList<Booking> getBookings() throws GetException {
     ArrayList<Booking> bookings = new ArrayList<>();
     String sql = "SELECT b.booking_id, b.lastname, b.firstname, b.amount, b.is_paid, b.phone, b.birthdate, b.email, b.date, c.charity_code, c.name, s.session_id, s.num_day, s.start_hour, s.end_hour, s.is_weekly, s.nb_max, a.activity_code, a.title FROM booking b " +
             "JOIN charity c ON b.charity_code = c.charity_code " +
             "JOIN session s ON b.session_id = s.session_id " +
             "JOIN activity a on s.activity_code = a.activity_code " +
-            "ORDER BY a.title, s.num_day, s.start_hour, b.date, b.lastname, b.firstname;";
+            "ORDER BY b.date DESC, a.title, s.num_day, s.start_hour, b.lastname, b.firstname;";
   
     try {
       PreparedStatement req = connection.prepareStatement(sql);
@@ -330,13 +330,13 @@ public class BookingDBAccess implements BookingDataAccess {
         bookings.add(booking);
       }
     } catch (SQLException | InvalidBookingException | SessionNumDayException e) {
-      throw new GetBookingsException(e.getMessage());
+      throw new GetException(e.getMessage());
     }
     
     return bookings;
   }
   
-  public ArrayList<Booking> getBookings(Session session, LocalDate date) throws GetBookingsException {
+  public ArrayList<Booking> getBookings(Session session, LocalDate date) throws GetException {
     ArrayList<Booking> bookings = new ArrayList<>();
     String sql = "SELECT b.booking_id, b.lastname, b.firstname, b.amount, b.is_paid, b.phone, b.birthdate, b.email, c.charity_code , c.name " +
             "FROM booking b " +
@@ -376,13 +376,13 @@ public class BookingDBAccess implements BookingDataAccess {
         bookings.add(booking);
       }
     } catch (SQLException | InvalidBookingException e) {
-      throw new GetBookingsException(e.getMessage());
+      throw new GetException(e.getMessage());
     }
     
     return bookings;
   }
   
-  public Boolean isSessionFull(Session session, LocalDate date) throws IsSessionFullException {
+  public Boolean isSessionFull(Session session, LocalDate date) throws GetException {
     String sql = "SELECT count(*) as count, s.nb_max FROM booking b JOIN session s ON b.session_id = s.session_id  WHERE b.session_id = ? AND b.date = ?";
     
     Boolean isFull = null;
@@ -402,12 +402,31 @@ public class BookingDBAccess implements BookingDataAccess {
         isFull = count >= nbMax;
       }
     } catch (SQLException e) {
-      throw new IsSessionFullException(e.getMessage());
+      throw new GetException(e.getMessage());
     }
     return isFull;
   }
   
-  public ArrayList<AmountActivity> getAmountsPerActivity(Charity charity) throws GetAmountsPerActivityException {
+  @Override
+  public Double getTotal() throws GetException {
+    String sql = "SELECT SUM(amount) as amounts FROM booking ;" +
+            "";
+    Double result = null;
+    try {
+      PreparedStatement req = connection.prepareStatement(sql);
+    
+      ResultSet data = req.executeQuery();
+    
+      while (data.next()) {
+        result = data.getDouble("amounts");
+      }
+    } catch (SQLException e) {
+      throw new GetException(e.getMessage());
+    }
+    return result;
+  }
+  
+  public ArrayList<AmountActivity> getAmountsPerActivity(Charity charity) throws GetException {
     String sql = "SELECT SUM(b.amount) as amounts, a.title " +
             "FROM booking b " +
             "JOIN session s ON b.session_id = s.session_id " +
@@ -429,13 +448,13 @@ public class BookingDBAccess implements BookingDataAccess {
         resultList.add(amountActivity);
       }
     } catch (SQLException e) {
-      throw new GetAmountsPerActivityException(e.getMessage());
+      throw new GetException(e.getMessage());
     }
     return resultList;
   }
   
   @Override
-  public ArrayList<Booking> getPeoplePerActivityAndCharity(Activity activity, Charity charity) throws GetPeoplePerActivityAndCharityException {
+  public ArrayList<Booking> getPeoplePerActivityAndCharity(Activity activity, Charity charity) throws GetException {
     String sql = "SELECT b.booking_id, b.firstname, b.lastname, b.amount, b.is_paid, b.phone,  b.birthdate, b.email, b.date, s.session_id " +
             "FROM booking b " +
             "JOIN session s ON b.session_id = s.session_id " +
@@ -473,12 +492,12 @@ public class BookingDBAccess implements BookingDataAccess {
           resultList.add(booking);
         }
     } catch (SQLException | InvalidBookingException e ) {
-      throw new GetPeoplePerActivityAndCharityException(e.getMessage());
+      throw new GetException(e.getMessage());
     }
     return resultList;
   }
   
-  public ArrayList<Charity> getCharityAtHour(LocalTime time) throws GetCharityAtHourException {
+  public ArrayList<Charity> getCharityAtHour(LocalTime time) throws GetException {
     String sql = "SELECT c.charity_code, c.name, c.contact, c.address, c.city, c.zip_code, c.country FROM charity c " +
             "JOIN booking b ON c.charity_code = b.charity_code " +
             "JOIN session s ON b.session_id = s.session_id " +
@@ -505,7 +524,7 @@ public class BookingDBAccess implements BookingDataAccess {
       }
       
     } catch (SQLException e) {
-      throw new GetCharityAtHourException(e.getMessage());
+      throw new GetException(e.getMessage());
     }
     
     return resultList;

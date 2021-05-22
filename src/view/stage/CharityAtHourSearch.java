@@ -1,10 +1,7 @@
 package view.stage;
 
 import controller.BookingController;
-import exception.data.GetActivitiesException;
-import exception.data.GetCharityAtHourException;
-import exception.data.GetCharityException;
-import exception.data.GetPeoplePerActivityAndCharityException;
+import exception.data.GetException;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -12,23 +9,18 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import model.Activity;
-import model.AmountActivity;
-import model.Booking;
 import model.Charity;
-import view.component.ActivityCell;
-import view.component.CharityCell;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
 public class CharityAtHourSearch extends Stage {
   private Scene scene;
   private BorderPane pane;
-  private HBox top;
+  private VBox top;
   
   private DatePicker startDatePicker;
   private DatePicker endDatePicker;
@@ -71,7 +63,6 @@ public class CharityAtHourSearch extends Stage {
     
     submitBtn = new Button("Rechercher");
     submitBtn.setOnAction(event -> {
-      System.out.println("minutePicker.getValue() = " + minutePicker.getValue());
       if (hourPicker.getValue() == null) {
         errorAlert.setHeaderText("Heure non valide");
         errorAlert.show();
@@ -103,7 +94,7 @@ public class CharityAtHourSearch extends Stage {
       try {
         ArrayList<Charity> results = controller.getCharityAtHour(time);
         center.setItems(FXCollections.observableArrayList(results));
-      } catch (GetCharityAtHourException e) {
+      } catch (GetException e) {
         errorAlert.setHeaderText("Erreur lors de la recherche");
         errorAlert.setContentText(e.getMessage());
         errorAlert.show();
@@ -111,7 +102,7 @@ public class CharityAtHourSearch extends Stage {
       
     });
     
-    top = new HBox(10, new Label("Heure: "), hourPicker, new Label(":"), minutePicker, new Label("Date de début: "), startDatePicker, new Label("Date de fin: "), endDatePicker, submitBtn);
+    top = new VBox(10, new HBox(10, new Label("Heure: "), hourPicker, new Label(":"), minutePicker), new HBox(new Label("Date de début: "), startDatePicker),new HBox( new Label("Date de fin: "), endDatePicker),new HBox( submitBtn));
     pane.setTop(top);
     
     center = new TableView<>();
@@ -131,6 +122,12 @@ public class CharityAtHourSearch extends Stage {
     this.setTitle("Association pour une heure et date");
     this.setScene(scene);
     this.setHeight(600);
-    this.setWidth(800);
+    this.setWidth(850);
+  }
+
+  public void reset() {
+    hourPicker.getSelectionModel().select(null);
+    center.setItems(null);
+
   }
 }

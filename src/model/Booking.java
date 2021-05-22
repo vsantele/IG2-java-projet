@@ -25,14 +25,14 @@ public class Booking {
     setId(id);
     setFirstname(firstname);
     setLastname(lastname);
+    setPhone(phone);
+    setEmail(email);
+    setBirthdate(birthdate);
     setAmount(amount);
     setPaid(isPaid);
-    setPhone(phone);
-    setBirthdate(birthdate);
-    setEmail(email);
-    setDate(date);
     setCharity(charity);
     setSession(session);
+    setDate(date);
     
 //    if (getCharityCode() == null) throw new InvalidBookingException("association");
   }
@@ -90,11 +90,11 @@ public class Booking {
   }
   
   public void setDate(LocalDate date) throws InvalidBookingException {
-    if (date == null) throw new InvalidBookingException("date");
+    if (date == null) throw new InvalidBookingException("date de réservation");
     this.date = date;
   }
   
-  public void setCharity(Charity charity) throws InvalidBookingException {
+  public void setCharity(Charity charity) {
     this.charity = charity;
   }
   

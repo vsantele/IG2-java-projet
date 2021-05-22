@@ -1,10 +1,7 @@
 package view.stage;
 
-import business.DateGenerator;
 import controller.BookingController;
-import exception.data.GetAmountsPerActivityException;
-import exception.data.GetCharityException;
-import exception.data.GetDatesException;
+import exception.data.GetException;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -19,7 +16,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.AmountActivity;
 import model.Charity;
-import model.Session;
 import view.component.CharityCell;
 
 import java.util.ArrayList;
@@ -43,7 +39,7 @@ public class AmountsPerActivitySearch extends Stage {
     try {
       ArrayList<Charity> charities = controller.getCharities();
       charityPicker.setItems(FXCollections.observableArrayList(charities));
-    } catch (GetCharityException e) {
+    } catch (GetException e) {
       e.printStackTrace();
     }
   
@@ -53,7 +49,7 @@ public class AmountsPerActivitySearch extends Stage {
         try {
           ArrayList<AmountActivity> results = controller.getAmountsPerActivity(selectedCharity);
           center.setItems(FXCollections.observableArrayList(results));
-        } catch (GetAmountsPerActivityException e) {
+        } catch (GetException e) {
           e.printStackTrace();
         }
       } else {
@@ -83,5 +79,10 @@ public class AmountsPerActivitySearch extends Stage {
     this.setScene(scene);
     this.setWidth(300);
     this.setHeight(500);
+  }
+
+  public void update() {
+    charityPicker.getSelectionModel().select(null);
+    center.setItems(null);
   }
 }

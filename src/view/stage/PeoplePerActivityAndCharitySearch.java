@@ -1,10 +1,7 @@
 package view.stage;
 
 import controller.BookingController;
-import exception.data.GetActivitiesException;
-import exception.data.GetAmountsPerActivityException;
-import exception.data.GetCharityException;
-import exception.data.GetPeoplePerActivityAndCharityException;
+import exception.data.GetException;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -15,7 +12,6 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.Activity;
-import model.AmountActivity;
 import model.Booking;
 import model.Charity;
 import view.component.ActivityCell;
@@ -47,7 +43,7 @@ public class PeoplePerActivityAndCharitySearch extends Stage {
     try {
       ArrayList<Activity> activities = controller.getActivities();
       activityPicker.setItems(FXCollections.observableArrayList(activities));
-    } catch (GetActivitiesException e) {
+    } catch (GetException e) {
       e.printStackTrace();
     }
     activityPicker.valueProperty().addListener(observable -> {
@@ -60,7 +56,7 @@ public class PeoplePerActivityAndCharitySearch extends Stage {
     try {
       ArrayList<Charity> charities = controller.getCharities();
       charityPicker.setItems(FXCollections.observableArrayList(charities));
-    } catch (GetCharityException e) {
+    } catch (GetException e) {
       e.printStackTrace();
     }
   
@@ -74,7 +70,7 @@ public class PeoplePerActivityAndCharitySearch extends Stage {
         try {
           ArrayList<Booking> results = controller.getPeoplePerActivityAndCharity(selectedActivity, selectedCharity);
           center.setItems(FXCollections.observableArrayList(results));
-        } catch (GetPeoplePerActivityAndCharityException e) {
+        } catch (GetException e) {
           e.printStackTrace();
         }
       } else {

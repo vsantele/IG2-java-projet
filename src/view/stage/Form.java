@@ -27,6 +27,8 @@ import view.component.CharityCell;
 import view.component.DateCell;
 import view.component.SessionCell;
 
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -81,7 +83,7 @@ public class Form extends Stage{
     lastnameTextField = new TextField();
     lastnameTextField.setPromptText("Doe");
     phoneTextField = new TextField();
-    phoneTextField.setPromptText("0124/56.78.90");
+    phoneTextField.setPromptText("0123/45.67.89");
     emailTextField = new TextField();
     emailTextField.setPromptText("john.doe@email.com");
     birthdatePicker = new DatePicker();
@@ -101,7 +103,7 @@ public class Form extends Stage{
     try {
       charities = controller.getCharities();
       charityPicker.setItems(FXCollections.observableArrayList(charities));
-    } catch (GetCharityException e) {
+    } catch (GetException e) {
       e.printStackTrace();
     }
   
@@ -110,7 +112,7 @@ public class Form extends Stage{
     try {
       activities = controller.getActivities();
       activityPicker.setItems(FXCollections.observableArrayList(activities));
-    } catch (GetActivitiesException e) {
+    } catch (GetException e) {
       e.printStackTrace();
     }
     
@@ -131,7 +133,7 @@ public class Form extends Stage{
         if (datePicker.getValue() != null) {
           datePicker.setItems(null);
         }
-      } catch (GetSessionsException e) {
+      } catch (GetException e) {
         e.printStackTrace();
       }
     });
@@ -150,7 +152,7 @@ public class Form extends Stage{
         } else {
           datePicker.setDisable(true);
         }
-      } catch (GetDatesException e) {
+      } catch (GetException e) {
         e.printStackTrace();
       }
     });
@@ -220,7 +222,8 @@ public class Form extends Stage{
       phoneTextField.setText(booking.getPhone());
       emailTextField.setText(booking.getEmail());
       birthdatePicker.setValue(booking.getBirthdate());
-      amountTextField.setText(booking.getAmount().toString());
+      
+      amountTextField.setText(NumberFormat.getInstance().format(booking.getAmount()));
       
       if (booking.isPaid()) {
         isPaidYes.setSelected(true);
@@ -235,14 +238,14 @@ public class Form extends Stage{
         }
         charityPicker.getSelectionModel().select(charity);
         
-      } catch (GetCharityException e) {
+      } catch (GetException e) {
         e.printStackTrace();
       }
       
       try {
         Activity activity = controller.getActivity(booking.getSessionId());
         activityPicker.getSelectionModel().select(activity);
-      } catch (GetActivityException e) {
+      } catch (GetException e) {
         e.printStackTrace();
       }
       
@@ -267,12 +270,13 @@ public class Form extends Stage{
       Double amount;
       try {
         if (amountTextField.getText() == null) amount = null;
-        else amount = Double.parseDouble(amountTextField.getText());
-      } catch ( NumberFormatException e ) {
-        System.out.println("Mauvais nombre");
+        else {
+          amount = (Double) NumberFormat.getInstance().parse(amountTextField.getText());
+        }
+      } catch (ParseException | ClassCastException e ) {
         errorAlert.setTitle("Montant non valide");
         errorAlert.setHeaderText(null);
-        errorAlert.setContentText("Veuillez entrer un nombre valide");
+        errorAlert.setContentText("Veuillez entrer un nombre valide. Le séparateur des décimales est la virgule (,)");
         errorAlert.showAndWait();
         return;
       }
@@ -281,13 +285,43 @@ public class Form extends Stage{
       Boolean isPaid = isPaidSelected.getText().equals(isPaidYesValue);
       
       Charity charity = charityPicker.getValue();
+      
+      if (charity == null ) {
+        errorAlert.setTitle("Association requise");
+        errorAlert.setHeaderText(null);
+        errorAlert.setContentText("Veuillez entrez une association pour réserver une séance");
+        errorAlert.showAndWait();
+        return;
+      }
+      
+      if(activityPicker.getValue() == null) {
+        errorAlert.setTitle("Activité requise");
+        errorAlert.setHeaderText(null);
+        errorAlert.setContentText("Veuillez entrez une activité pour réserver une séance");
+        errorAlert.showAndWait();
+        return;
+      }
+      
       Session session = sessionPicker.getValue();
+      
+      if (session == null) {
+        errorAlert.setTitle("Session requise");
+        errorAlert.setHeaderText(null);
+        errorAlert.setContentText("Veuillez entrez une session pour réserver une séance");
+        errorAlert.showAndWait();
+        return;
+      }
+      
       LocalDate date = datePicker.getValue();
   
       try {
         if (isUpdate) {
           if (booking == null) {
-            System.out.println("Aucune réservation n'a été définie");
+            errorAlert.setTitle("Aucune réservation");
+            errorAlert.setHeaderText(null);
+            errorAlert.setContentText("Vous tentez de faire une mise à jour d'une réservation inexistante");
+            errorAlert.showAndWait();
+            return;
           } else {
             booking.setFirstname(firstname);
             booking.setLastname(lastname);

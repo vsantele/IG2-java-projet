@@ -26,7 +26,7 @@ public class BookingManager {
         booking.setId(index);
         return true;
       }
-    } catch (IsSessionFullException e) {
+    } catch (GetException e) {
       throw new AddBookingException(e.getMessage());
     }
     return false;
@@ -38,7 +38,7 @@ public class BookingManager {
         dao.updateBooking(booking);
         return true;
       }
-    } catch (IsSessionFullException e) {
+    } catch (GetException e) {
       throw new UpdateBookingException(e.getMessage());
     }
     return false;
@@ -48,43 +48,47 @@ public class BookingManager {
     return dao.deleteBooking(booking);
   }
   
-  public ArrayList<Booking> getBookings() throws GetBookingsException {
+  public ArrayList<Booking> getBookings() throws GetException {
     return dao.getBookings();
   }
   
-  public ArrayList<Session> getSessions(Activity activity) throws GetSessionsException {
+  public ArrayList<Session> getSessions(Activity activity) throws GetException {
     return dao.getSessions(activity);
   }
   
-  public ArrayList<Activity> getActivities() throws GetActivitiesException {
+  public ArrayList<Activity> getActivities() throws GetException {
     return dao.getActivities();
   }
   
-  public Charity getCharity(String charityCode) throws GetCharityException {
+  public Charity getCharity(String charityCode) throws GetException {
     return dao.getCharity(charityCode);
   }
   
-  public ArrayList<Charity> getCharities() throws GetCharityException {
+  public ArrayList<Charity> getCharities() throws GetException {
     return dao.getCharities();
   }
   
-  public Boolean isSessionFull(Session session, LocalDate date) throws IsSessionFullException {
+  public Boolean isSessionFull(Session session, LocalDate date) throws GetException {
     return dao.isSessionFull(session, date);
   }
   
-  public ArrayList<Charity> getCharityAtHour(LocalTime time) throws GetCharityAtHourException {
+  public ArrayList<Charity> getCharityAtHour(LocalTime time) throws GetException {
     return dao.getCharityAtHour(time);
   }
   
-  public ArrayList<Booking> getPeoplePerActivityAndCharity(Activity activity, Charity charity) throws GetPeoplePerActivityAndCharityException {
+  public ArrayList<Booking> getPeoplePerActivityAndCharity(Activity activity, Charity charity) throws GetException {
     return dao.getPeoplePerActivityAndCharity(activity, charity);
   }
   
-  public ArrayList<AmountActivity> getAmountsPerActivity(Charity charity) throws GetAmountsPerActivityException {
+  public ArrayList<AmountActivity> getAmountsPerActivity(Charity charity) throws GetException {
     return dao.getAmountsPerActivity(charity);
   }
   
-  public Activity getActivity(Integer session) throws GetActivityException {
+  public Activity getActivity(Integer session) throws GetException {
     return dao.getActivity(session);
+  }
+  
+  public Double getTotal() throws GetException {
+    return dao.getTotal();
   }
 }

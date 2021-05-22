@@ -8,22 +8,24 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 
 public interface BookingDataAccess {
-  ArrayList<Booking> getBookings() throws GetBookingsException;
-  ArrayList<Booking> getBookings(Session session, LocalDate date) throws GetBookingsException;
+  ArrayList<Booking> getBookings() throws GetException;
+  ArrayList<Booking> getBookings(Session session, LocalDate date) throws GetException;
   int addBooking(Booking booking) throws AddBookingException;
   int updateBooking(Booking booking) throws UpdateBookingException;
   int deleteBooking(Booking booking) throws DeleteBookingException;
   
-  ArrayList<Date> getDates(Session session, LocalDate start, LocalDate end) throws GetDatesException;
-  ArrayList<Activity> getActivities() throws GetActivitiesException;
-  ArrayList<Session> getSessions(Activity activity) throws GetSessionsException;
-  ArrayList<Charity> getCharities() throws GetCharityException;
+  ArrayList<Date> getDates(Session session, LocalDate start, LocalDate end) throws GetException;
+  ArrayList<Activity> getActivities() throws GetException;
+  ArrayList<Session> getSessions(Activity activity) throws GetException;
+  ArrayList<Charity> getCharities() throws GetException;
   
-  ArrayList<AmountActivity> getAmountsPerActivity(Charity charity) throws GetAmountsPerActivityException;
-  ArrayList<Booking> getPeoplePerActivityAndCharity(Activity activity, Charity charity) throws GetPeoplePerActivityAndCharityException;
-  ArrayList<Charity> getCharityAtHour(LocalTime time) throws GetCharityAtHourException;
+  ArrayList<AmountActivity> getAmountsPerActivity(Charity charity) throws GetException;
+  ArrayList<Booking> getPeoplePerActivityAndCharity(Activity activity, Charity charity) throws GetException;
+  ArrayList<Charity> getCharityAtHour(LocalTime time) throws GetException;
   
-  Activity getActivity(Integer session) throws GetActivityException;
-  Charity getCharity(String charityCode) throws GetCharityException;
-  Boolean isSessionFull(Session session, LocalDate date) throws IsSessionFullException;
+  Activity getActivity(Integer session) throws GetException;
+  Charity getCharity(String charityCode) throws GetException;
+  Boolean isSessionFull(Session session, LocalDate date) throws GetException;
+  
+  Double getTotal() throws GetException;
 }

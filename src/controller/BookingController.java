@@ -14,27 +14,27 @@ public class BookingController {
     this.bookingManager = bookingManager;
   }
   
-  public Activity getActivity(Session session) throws GetActivityException {
+  public Activity getActivity(Session session) throws GetException {
     return getActivity(session.getId());
   }
   
-  public Activity getActivity(Integer sessionId) throws GetActivityException {
+  public Activity getActivity(Integer sessionId) throws GetException {
     return bookingManager.getActivity(sessionId);
   }
   
-  public ArrayList<Session> getSessions(Activity activity) throws GetSessionsException {
+  public ArrayList<Session> getSessions(Activity activity) throws GetException {
     return bookingManager.getSessions(activity);
   }
   
-  public ArrayList<Activity> getActivities() throws GetActivitiesException {
+  public ArrayList<Activity> getActivities() throws GetException {
     return bookingManager.getActivities();
   }
   
-  public Charity getCharity(String charityCode) throws GetCharityException {
+  public Charity getCharity(String charityCode) throws GetException {
     return bookingManager.getCharity(charityCode);
   }
   
-  public ArrayList<Charity> getCharities() throws GetCharityException {
+  public ArrayList<Charity> getCharities() throws GetException {
     return bookingManager.getCharities();
   }
   
@@ -50,19 +50,23 @@ public class BookingController {
     return bookingManager.deleteBooking(booking);
   }
   
-  public ArrayList<AmountActivity> getAmountsPerActivity(Charity charity) throws GetAmountsPerActivityException {
+  public ArrayList<AmountActivity> getAmountsPerActivity(Charity charity) throws GetException {
     return bookingManager.getAmountsPerActivity(charity);
   }
   
-  public ArrayList<Booking> getPeoplePerActivityAndCharity(Activity activity, Charity charity) throws GetPeoplePerActivityAndCharityException {
+  public ArrayList<Booking> getPeoplePerActivityAndCharity(Activity activity, Charity charity) throws GetException {
     return bookingManager.getPeoplePerActivityAndCharity(activity, charity);
   }
   
-  public ArrayList<Charity> getCharityAtHour(LocalTime time) throws GetCharityAtHourException {
+  public ArrayList<Charity> getCharityAtHour(LocalTime time) throws GetException {
     return bookingManager.getCharityAtHour(time);
   }
   
-  public ArrayList<Booking> getBookings() throws GetBookingsException {
+  public ArrayList<Booking> getBookings() throws GetException {
     return bookingManager.getBookings();
+  }
+  
+  public Double getTotal() throws GetException {
+    return bookingManager.getTotal();
   }
 }

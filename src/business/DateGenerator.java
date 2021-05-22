@@ -1,7 +1,7 @@
 package business;
 
 import data.access.*;
-import exception.data.GetDatesException;
+import exception.data.GetException;
 import model.*;
 import model.Date;
 
@@ -9,7 +9,7 @@ import java.time.*;
 import java.util.*;
 
 public class DateGenerator {
-  static public ArrayList<LocalDate> getDates(Session session, LocalDate start, LocalDate end) throws GetDatesException {
+  static public ArrayList<LocalDate> getDates(Session session, LocalDate start, LocalDate end) throws GetException {
     BookingDataAccess dao = new BookingDBAccess();
     ArrayList<LocalDate> dates = new ArrayList<>();
   
@@ -35,12 +35,12 @@ public class DateGenerator {
     return dates;
   }
   
-   static public ArrayList<LocalDate> getDates(Session session) throws GetDatesException {
+   static public ArrayList<LocalDate> getDates(Session session) throws GetException {
     LocalDate start = LocalDate.now();
     return getDates(session, start);
   }
   
-  static public ArrayList<LocalDate> getDates(Session session, LocalDate start) throws GetDatesException {
+  static public ArrayList<LocalDate> getDates(Session session, LocalDate start) throws GetException {
     LocalDate later = start.plusDays(14);
     return getDates(session, start, later);
   }

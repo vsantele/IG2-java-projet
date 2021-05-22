@@ -1,7 +1,7 @@
 import business.BookingManager;
 import controller.BookingController;
 import exception.data.DeleteBookingException;
-import exception.data.GetBookingsException;
+import exception.data.GetException;
 import javafx.application.Application;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -13,10 +13,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import model.Booking;
-import view.stage.Form;
-import view.stage.AmountsPerActivitySearch;
-import view.stage.PeoplePerActivityAndCharitySearch;
-import view.stage.CharityAtHourSearch;
+import thread.TotalThread;
+import view.stage.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -31,9 +29,12 @@ public class Main extends Application {
     private Scene scene;
     
     private Form form;
+    private Total total;
     private AmountsPerActivitySearch amountsPerActivitySearch;
     private PeoplePerActivityAndCharitySearch peoplePerActivityAndCharitySearch;
     private CharityAtHourSearch charityAtHourSearch;
+    
+    private TotalThread totalThread;
     
     private Button addBtn;
     private Button amountsPerActivitySearchBtn;
@@ -65,7 +66,14 @@ public class Main extends Application {
         
         bookingManager = new BookingManager();
         bookingController = new BookingController(bookingManager);
+        
         form = new Form(primaryStage, bookingController);
+        total = new Total(primaryStage, bookingController);
+        
+        
+        totalThread = new TotalThread(total);
+        totalThread.start();
+        
         amountsPerActivitySearch = new AmountsPerActivitySearch(primaryStage, bookingController);
         peoplePerActivityAndCharitySearch = new PeoplePerActivityAndCharitySearch(primaryStage, bookingController);
         charityAtHourSearch = new CharityAtHourSearch(primaryStage, bookingController);
@@ -99,6 +107,7 @@ public class Main extends Application {
         
         addBtn = new Button("Ajouter Réservation");
         addBtn.setOnAction(event -> {
+            form.setUpdate(false);
             form.setBooking(null);
             form.showAndWait();
             getBookings();
@@ -106,6 +115,7 @@ public class Main extends Application {
         });
         amountsPerActivitySearchBtn = new Button("Recettes par activité");
         amountsPerActivitySearchBtn.setOnAction(event -> {
+            amountsPerActivitySearch.update();
             amountsPerActivitySearch.show();
         });
         peoplePerActivityAndCharitySearchBtn = new Button("Réservation pour activité et Association");
@@ -224,13 +234,15 @@ public class Main extends Application {
         //vBox.setAlignment(Pos.CENTER);
         primaryStage.setScene(scene);
         primaryStage.show();
+        total.show();
+        
     }
     
     void getBookings() {
         try {
             ArrayList<Booking> charities = bookingController.getBookings();
             center.setItems(FXCollections.observableArrayList(charities));
-        } catch (GetBookingsException e) {
+        } catch (GetException e) {
             e.printStackTrace();
         }
     }
