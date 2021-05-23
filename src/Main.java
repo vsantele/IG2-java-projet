@@ -71,7 +71,7 @@ public class Main extends Application {
         total = new Total(primaryStage, bookingController);
         
         
-        totalThread = new TotalThread(total);
+        totalThread = new TotalThread(total, bookingController);
         totalThread.start();
         
         amountsPerActivitySearch = new AmountsPerActivitySearch(primaryStage, bookingController);
@@ -84,6 +84,8 @@ public class Main extends Application {
         choiceAlert = new Alert(Alert.AlertType.CONFIRMATION);
         choiceAlert.setTitle("Editer ou Supprimer");
         choiceAlert.setHeaderText("Quelle action voulez-vous effectuer?");
+        
+        errorAlert = new Alert(Alert.AlertType.ERROR);
         
         editBtn = new ButtonType("Editer");
         deleteBtn = new ButtonType("Supprimer");
@@ -227,15 +229,13 @@ public class Main extends Application {
         
         center.getColumns().setAll(firstnameCol, lastnameCol, phoneCol, birthdateCol, emailCol,amountCol, isPaidCol, charityCol, dateCol, sessionCol, activityCol);
         pane.setCenter(center);
-        
-        getBookings();
     
         // border pane
         //vBox.setAlignment(Pos.CENTER);
         primaryStage.setScene(scene);
         primaryStage.show();
         total.show();
-        
+        getBookings();
     }
     
     void getBookings() {
@@ -243,7 +243,9 @@ public class Main extends Application {
             ArrayList<Booking> charities = bookingController.getBookings();
             center.setItems(FXCollections.observableArrayList(charities));
         } catch (GetException e) {
-            e.printStackTrace();
+            errorAlert.setHeaderText(e.getMessage());
+            errorAlert.setContentText(e.getDetails());
+            errorAlert.showAndWait();
         }
     }
 }

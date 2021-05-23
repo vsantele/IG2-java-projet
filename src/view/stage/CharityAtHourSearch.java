@@ -95,9 +95,9 @@ public class CharityAtHourSearch extends Stage {
         ArrayList<Charity> results = controller.getCharityAtHour(time);
         center.setItems(FXCollections.observableArrayList(results));
       } catch (GetException e) {
-        errorAlert.setHeaderText("Erreur lors de la recherche");
-        errorAlert.setContentText(e.getMessage());
-        errorAlert.show();
+        errorAlert.setHeaderText(e.getMessage());
+        errorAlert.setContentText(e.getDetails());
+        errorAlert.showAndWait();
       }
       
     });

@@ -4,20 +4,24 @@ import controller.BookingController;
 import exception.data.GetException;
 import javafx.application.Platform;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 public class Total extends Stage {
   private Scene scene;
-  public HBox pane;
-  public Label amountLabel;
-  public BookingController controller;
+  private HBox pane;
+  private Label amountLabel;
+  private BookingController controller;
+  
+  private Alert errorAlert;
   
   public Total(Stage primaryStage, BookingController controller) {
     amountLabel = new Label("chargement...");
     pane = new HBox(new Label("Montant total de l'évènement: "), amountLabel);
     scene = new Scene(pane);
+    errorAlert = new Alert(Alert.AlertType.ERROR);
     
     this.controller = controller;
     this.initOwner(primaryStage);
@@ -27,15 +31,21 @@ public class Total extends Stage {
     this.setWidth(250);
   }
   
-  public void update() {
+  public void update() throws GetException {
     try {
-      Double total = controller.getTotal();
-      Platform.runLater(() -> {
-        amountLabel.setText(total + "€");
-      });
-      
+      throw new GetException();
+//      Double total = controller.getTotal();
+//      Platform.runLater(() -> {
+//        amountLabel.setText(total + "€");
+//      });
     } catch (GetException e) {
-      e.printStackTrace();
+      Platform.runLater(() -> {
+        amountLabel.setText("Erreur");
+        errorAlert.setHeaderText(e.getMessage());
+        errorAlert.setContentText(e.getDetails());
+        errorAlert.showAndWait();
+      });
+      throw e;
     }
   }
 }

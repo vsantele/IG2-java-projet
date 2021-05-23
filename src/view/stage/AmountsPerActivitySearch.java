@@ -5,10 +5,7 @@ import exception.data.GetException;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -24,14 +21,21 @@ public class AmountsPerActivitySearch extends Stage {
   private Scene scene;
   private BorderPane pane;
   private HBox top;
+  
   private ComboBox<Charity> charityPicker;
   private TableView<AmountActivity> center;
+  
+  private Alert errorAlert;
+  
   private BookingController controller;
   
   public AmountsPerActivitySearch(Stage primaryStage, BookingController controller) {
     this.controller = controller;
     pane = new BorderPane();
     scene = new Scene(pane);
+    
+    errorAlert = new Alert(Alert.AlertType.ERROR);
+    errorAlert.setTitle("Erreur");
   
     charityPicker = new ComboBox<>();
     charityPicker.setButtonCell(new CharityCell());
@@ -40,7 +44,9 @@ public class AmountsPerActivitySearch extends Stage {
       ArrayList<Charity> charities = controller.getCharities();
       charityPicker.setItems(FXCollections.observableArrayList(charities));
     } catch (GetException e) {
-      e.printStackTrace();
+      errorAlert.setHeaderText(e.getMessage());
+      errorAlert.setContentText(e.getDetails());
+      errorAlert.showAndWait();
     }
   
     charityPicker.valueProperty().addListener(observable -> {
@@ -50,11 +56,12 @@ public class AmountsPerActivitySearch extends Stage {
           ArrayList<AmountActivity> results = controller.getAmountsPerActivity(selectedCharity);
           center.setItems(FXCollections.observableArrayList(results));
         } catch (GetException e) {
-          e.printStackTrace();
+          errorAlert.setHeaderText(e.getMessage());
+          errorAlert.setContentText(e.getDetails());
+          errorAlert.showAndWait();
         }
-      } else {
-        System.out.println("association manquantes");
       }
+      
     });
     
     top = new HBox(10, new Label("Associations: "), charityPicker);

@@ -3,7 +3,7 @@ package data.access;
 import data.connection.MariadbConnection;
 import exception.SessionNumDayException;
 import exception.data.*;
-import exception.model.booking.InvalidBookingException;
+import exception.model.InvalidBookingException;
 import model.*;
 import model.Date;
 import util.Utils;
@@ -61,11 +61,11 @@ public class BookingDBAccess implements BookingDataAccess {
       if (generatedKeys.next()) {
         return generatedKeys.getInt(1);
       } else {
-        throw new AddBookingException("Erreur lors de la récupération de l'id");
+        throw new AddBookingException("Erreur lors de la récupération de l'identifiant");
       }
 
     } catch (SQLException exception) {
-      throw new AddBookingException(exception.getMessage());
+      throw new AddBookingException();
     }
   }
   
@@ -103,7 +103,7 @@ public class BookingDBAccess implements BookingDataAccess {
       req.setInt(11, booking.getId());
       return req.executeUpdate();
     } catch (SQLException exception) {
-      throw new UpdateBookingException(exception.getMessage());
+      throw new UpdateBookingException();
     }
   }
   
@@ -116,8 +116,7 @@ public class BookingDBAccess implements BookingDataAccess {
       
       return req.executeUpdate();
     } catch (SQLException e) {
-      e.printStackTrace();
-      throw new DeleteBookingException(e.getMessage());
+      throw new DeleteBookingException();
     }
   }
   
@@ -146,7 +145,7 @@ public class BookingDBAccess implements BookingDataAccess {
         dates.add(entryDate);
       }
     } catch (SQLException e) {
-      throw new GetException(e.getMessage());
+      throw new GetException();
     }
     
     return dates;
@@ -167,7 +166,7 @@ public class BookingDBAccess implements BookingDataAccess {
         activity = new Activity(data.getString("activity_code"), data.getString("title"));
       }
     } catch (SQLException e) {
-      throw new GetException(e.getMessage());
+      throw new GetException();
     }
     return activity;
   }
@@ -189,7 +188,7 @@ public class BookingDBAccess implements BookingDataAccess {
         activities.add(activity);
       }
     } catch (SQLException e) {
-      throw new GetException(e.getMessage());
+      throw new GetException();
     }
     
     return activities;
@@ -219,7 +218,9 @@ public class BookingDBAccess implements BookingDataAccess {
         Session session = new Session(sessionId, numDay, startHour, endHour, isWeekly, nbMax, activity);
         sessions.add(session);
       }
-    } catch (SQLException | SessionNumDayException e) {
+    } catch (SQLException  e) {
+      throw new GetException();
+    } catch (SessionNumDayException e) {
       throw new GetException(e.getMessage());
     }
     
@@ -247,7 +248,7 @@ public class BookingDBAccess implements BookingDataAccess {
         charity = new Charity(charityCode, name, contact, address, city, country, zipCode);
       }
     } catch (SQLException e) {
-      throw new GetException(e.getMessage());
+      throw new GetException();
     }
     return charity;
   }
@@ -274,7 +275,7 @@ public class BookingDBAccess implements BookingDataAccess {
         charities.add(charity);
       }
     } catch (SQLException e) {
-      throw new GetException(e.getMessage());
+      throw new GetException();
     }
     
     return charities;
@@ -329,7 +330,9 @@ public class BookingDBAccess implements BookingDataAccess {
         Booking booking = new Booking(bookingId, firstName, lastName, amount, isPaid, phone, birthdate, email, date, charity, session );
         bookings.add(booking);
       }
-    } catch (SQLException | InvalidBookingException | SessionNumDayException e) {
+    } catch (SQLException e) {
+      throw new GetException();
+    } catch (InvalidBookingException | SessionNumDayException e) {
       throw new GetException(e.getMessage());
     }
     
@@ -375,7 +378,9 @@ public class BookingDBAccess implements BookingDataAccess {
         Booking booking = new Booking(bookingId, lastName, firstName, amount, isPaid, phone, birthdate, email, date, charity, session);
         bookings.add(booking);
       }
-    } catch (SQLException | InvalidBookingException e) {
+    } catch (SQLException e) {
+      throw new GetException();
+    } catch (InvalidBookingException e) {
       throw new GetException(e.getMessage());
     }
     
@@ -402,7 +407,7 @@ public class BookingDBAccess implements BookingDataAccess {
         isFull = count >= nbMax;
       }
     } catch (SQLException e) {
-      throw new GetException(e.getMessage());
+      throw new GetException();
     }
     return isFull;
   }
@@ -421,7 +426,7 @@ public class BookingDBAccess implements BookingDataAccess {
         result = data.getDouble("amounts");
       }
     } catch (SQLException e) {
-      throw new GetException(e.getMessage());
+      throw new GetException();
     }
     return result;
   }
@@ -448,7 +453,7 @@ public class BookingDBAccess implements BookingDataAccess {
         resultList.add(amountActivity);
       }
     } catch (SQLException e) {
-      throw new GetException(e.getMessage());
+      throw new GetException();
     }
     return resultList;
   }
@@ -491,7 +496,9 @@ public class BookingDBAccess implements BookingDataAccess {
           Booking booking = new Booking(id, lastname, firstname, amount, isPaid, phone, birthdate, email, date,  charity.getCode(), sessionId);
           resultList.add(booking);
         }
-    } catch (SQLException | InvalidBookingException e ) {
+    } catch (SQLException e ) {
+      throw new GetException();
+    } catch ( InvalidBookingException e) {
       throw new GetException(e.getMessage());
     }
     return resultList;
@@ -524,7 +531,7 @@ public class BookingDBAccess implements BookingDataAccess {
       }
       
     } catch (SQLException e) {
-      throw new GetException(e.getMessage());
+      throw new GetException();
     }
     
     return resultList;

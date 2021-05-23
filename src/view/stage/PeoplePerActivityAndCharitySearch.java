@@ -29,6 +29,8 @@ public class PeoplePerActivityAndCharitySearch extends Stage {
   private TableView<Booking> center;
   private BookingController controller;
   
+  private Alert errorAlert;
+  
   private Activity selectedActivity;
   private Charity selectedCharity;
   
@@ -36,6 +38,8 @@ public class PeoplePerActivityAndCharitySearch extends Stage {
     this.controller = controller;
     pane = new BorderPane();
     scene = new Scene(pane);
+    errorAlert = new Alert(Alert.AlertType.ERROR);
+//    errorAlert.setTitle("Erreur");
   
     activityPicker = new ComboBox<>();
     activityPicker.setButtonCell(new ActivityCell());
@@ -44,7 +48,9 @@ public class PeoplePerActivityAndCharitySearch extends Stage {
       ArrayList<Activity> activities = controller.getActivities();
       activityPicker.setItems(FXCollections.observableArrayList(activities));
     } catch (GetException e) {
-      e.printStackTrace();
+      errorAlert.setHeaderText(e.getMessage());
+      errorAlert.setContentText(e.getDetails());
+      errorAlert.showAndWait();
     }
     activityPicker.valueProperty().addListener(observable -> {
       selectedActivity = activityPicker.getValue();
@@ -57,7 +63,9 @@ public class PeoplePerActivityAndCharitySearch extends Stage {
       ArrayList<Charity> charities = controller.getCharities();
       charityPicker.setItems(FXCollections.observableArrayList(charities));
     } catch (GetException e) {
-      e.printStackTrace();
+      errorAlert.setHeaderText(e.getMessage());
+      errorAlert.setContentText(e.getDetails());
+      errorAlert.showAndWait();
     }
   
     charityPicker.valueProperty().addListener(observable -> {
@@ -71,7 +79,9 @@ public class PeoplePerActivityAndCharitySearch extends Stage {
           ArrayList<Booking> results = controller.getPeoplePerActivityAndCharity(selectedActivity, selectedCharity);
           center.setItems(FXCollections.observableArrayList(results));
         } catch (GetException e) {
-          e.printStackTrace();
+          errorAlert.setHeaderText(e.getMessage());
+          errorAlert.setContentText(e.getDetails());
+          errorAlert.showAndWait();
         }
       } else {
         System.out.println("Champs manquant");

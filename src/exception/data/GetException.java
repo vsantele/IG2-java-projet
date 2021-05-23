@@ -1,13 +1,20 @@
 package exception.data;
 
 public class GetException extends Exception{
-  private String msg;
+  private String details;
   
-  public GetException(String msg) {
-    this.msg = msg;
+  public GetException(String details) {
+    this.details = details;
+  }
+  public GetException() {
+    this(null);
   }
   
   public String getMessage() {
-    return "Erreur lors de la récupération des données...";
+    return "Erreur lors de la récupération des données";
+  }
+  
+  public String getDetails() {
+    return details;
   }
 }

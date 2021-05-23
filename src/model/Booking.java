@@ -1,6 +1,6 @@
 package model;
 
-import exception.model.booking.InvalidBookingException;
+import exception.model.InvalidBookingException;
 import util.Utils;
 
 import java.time.LocalDate;

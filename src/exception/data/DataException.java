@@ -1,13 +1,23 @@
 package exception.data;
 
 public abstract class DataException extends Exception{
-  private String msg;
+  private String operation;
+  private String details;
   
-  public DataException(String msg) {
-    this.msg = msg;
+  public DataException(String operation, String details) {
+    this.operation = operation;
+    this.details = details;
+  }
+  
+  public  DataException(String operation) {
+    this(operation, null);
   }
   
   public String getMessage() {
-    return "Le requête a retourné le message: " + msg;
+    return "Une erreur est survenue lors de l'opération suivante: " + operation;
+  }
+  
+  public String getDetails() {
+    return details;
   }
 }

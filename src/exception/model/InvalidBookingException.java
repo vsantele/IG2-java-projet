@@ -1,4 +1,4 @@
-package exception.model.booking;
+package exception.model;
 
 
 public class InvalidBookingException extends Exception{

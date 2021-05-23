@@ -3,7 +3,7 @@ package view.stage;
 import business.DateGenerator;
 import controller.BookingController;
 import exception.data.*;
-import exception.model.booking.InvalidBookingException;
+import exception.model.InvalidBookingException;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -76,6 +76,9 @@ public class Form extends Stage{
     grid.setPadding(new Insets(0, 10, 0, 10));
     scene = new Scene(grid);
   
+    infoAlert = new Alert(Alert.AlertType.INFORMATION);
+    errorAlert = new Alert(Alert.AlertType.ERROR);
+  
     isUpdate = false;
 
     firstnameTextField = new TextField();
@@ -104,7 +107,9 @@ public class Form extends Stage{
       charities = controller.getCharities();
       charityPicker.setItems(FXCollections.observableArrayList(charities));
     } catch (GetException e) {
-      e.printStackTrace();
+      errorAlert.setHeaderText(e.getMessage());
+      errorAlert.setContentText(e.getDetails());
+      errorAlert.showAndWait();
     }
   
     activityPicker = new ComboBox<>();
@@ -113,7 +118,9 @@ public class Form extends Stage{
       activities = controller.getActivities();
       activityPicker.setItems(FXCollections.observableArrayList(activities));
     } catch (GetException e) {
-      e.printStackTrace();
+      errorAlert.setHeaderText(e.getMessage());
+      errorAlert.setContentText(e.getDetails());
+      errorAlert.showAndWait();
     }
     
     activityPicker.setButtonCell(new ActivityCell());
@@ -134,7 +141,9 @@ public class Form extends Stage{
           datePicker.setItems(null);
         }
       } catch (GetException e) {
-        e.printStackTrace();
+        errorAlert.setHeaderText(e.getMessage());
+        errorAlert.setContentText(e.getDetails());
+        errorAlert.showAndWait();
       }
     });
     
@@ -153,7 +162,9 @@ public class Form extends Stage{
           datePicker.setDisable(true);
         }
       } catch (GetException e) {
-        e.printStackTrace();
+        errorAlert.setHeaderText(e.getMessage());
+        errorAlert.setContentText(null);
+        errorAlert.showAndWait();
       }
     });
     datePicker = new ComboBox<>();
@@ -166,9 +177,6 @@ public class Form extends Stage{
     cancelBtn.setOnAction(event -> {
       hide();
     });
-    
-    infoAlert = new Alert(Alert.AlertType.INFORMATION);
-    errorAlert = new Alert(Alert.AlertType.ERROR);
     
     grid.add(new Label("Prénom * "), 0,0);
     grid.add(firstnameTextField, 1,0);
@@ -239,14 +247,18 @@ public class Form extends Stage{
         charityPicker.getSelectionModel().select(charity);
         
       } catch (GetException e) {
-        e.printStackTrace();
+        errorAlert.setHeaderText(e.getMessage());
+        errorAlert.setContentText(e.getDetails());
+        errorAlert.showAndWait();
       }
       
       try {
         Activity activity = controller.getActivity(booking.getSessionId());
         activityPicker.getSelectionModel().select(activity);
       } catch (GetException e) {
-        e.printStackTrace();
+        errorAlert.setHeaderText(e.getMessage());
+        errorAlert.setContentText(e.getDetails());
+        errorAlert.showAndWait();
       }
       
       sessionPicker.getSelectionModel().select(new Session(booking.getSessionId()));
@@ -372,7 +384,9 @@ public class Form extends Stage{
         errorAlert.show();
       }
       catch (UpdateBookingException | AddBookingException e) {
-        e.printStackTrace();
+        errorAlert.setHeaderText(e.getMessage());
+        errorAlert.setContentText(e.getDetails());
+        errorAlert.showAndWait();
       }
   
     }
