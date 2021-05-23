@@ -33,11 +33,10 @@ public class Total extends Stage {
   
   public void update() throws GetException {
     try {
-      throw new GetException();
-//      Double total = controller.getTotal();
-//      Platform.runLater(() -> {
-//        amountLabel.setText(total + "€");
-//      });
+      Double total = controller.getTotal();
+      Platform.runLater(() -> {
+        amountLabel.setText(total + "€");
+      });
     } catch (GetException e) {
       Platform.runLater(() -> {
         amountLabel.setText("Erreur");
