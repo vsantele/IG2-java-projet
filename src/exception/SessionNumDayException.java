@@ -1,7 +1,7 @@
 package exception;
 
 public class SessionNumDayException extends Exception{
-  private Integer numDay;
+  private final Integer numDay;
   
   public SessionNumDayException(Integer numDay) {
     this.numDay = numDay;

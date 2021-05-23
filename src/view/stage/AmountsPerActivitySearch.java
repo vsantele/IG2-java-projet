@@ -18,21 +18,22 @@ import view.component.CharityCell;
 import java.util.ArrayList;
 
 public class AmountsPerActivitySearch extends Stage {
-  private Scene scene;
-  private BorderPane pane;
-  private HBox top;
+  private final Scene scene;
+  private final BorderPane pane;
+  private final HBox top;
   
-  private ComboBox<Charity> charityPicker;
-  private TableView<AmountActivity> center;
+  private final ComboBox<Charity> charityPicker;
+  private final TableView<AmountActivity> center;
   
-  private Alert errorAlert;
+  private final Alert errorAlert;
   
-  private BookingController controller;
+  private final BookingController controller;
   
   public AmountsPerActivitySearch(Stage primaryStage, BookingController controller) {
     this.controller = controller;
     pane = new BorderPane();
     scene = new Scene(pane);
+    center = new TableView<>();
     
     errorAlert = new Alert(Alert.AlertType.ERROR);
     errorAlert.setTitle("Erreur");
@@ -68,7 +69,7 @@ public class AmountsPerActivitySearch extends Stage {
     pane.setPadding(new Insets(15, 12, 15, 12));
     pane.setTop(top);
     
-    center = new TableView<>();
+    
     TableColumn<AmountActivity, String> activityCol = new TableColumn<>("Activité");
     activityCol.setCellValueFactory(new PropertyValueFactory<>("activity"));
     TableColumn<AmountActivity, String> amountCol = new TableColumn<>("Montant");

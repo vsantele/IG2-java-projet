@@ -1,7 +1,6 @@
 package exception.data;
 
 public class DeleteBookingException extends DataException {
-  private String details;
   
   public DeleteBookingException() {
     this(null);

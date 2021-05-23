@@ -2,7 +2,7 @@ package exception.model;
 
 
 public class InvalidBookingException extends Exception{
-  private String field;
+  private final String field;
   
   public InvalidBookingException(String field) {
     this.field = field;

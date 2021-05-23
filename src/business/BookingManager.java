@@ -9,7 +9,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 
 public class BookingManager {
-  private BookingDataAccess dao;
+  private final BookingDataAccess dao;
   
   public BookingManager() {
     this(new BookingDBAccess());

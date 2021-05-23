@@ -10,10 +10,10 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 public class Total extends Stage {
-  private Scene scene;
-  private HBox pane;
-  private Label amountLabel;
-  private BookingController controller;
+  private final Scene scene;
+  private final HBox pane;
+  private final Label amountLabel;
+  private final BookingController controller;
   
   private Alert errorAlert;
   
@@ -34,9 +34,7 @@ public class Total extends Stage {
   public void update() throws GetException {
     try {
       Double total = controller.getTotal();
-      Platform.runLater(() -> {
-        amountLabel.setText(total + "€");
-      });
+      Platform.runLater(() -> amountLabel.setText(total + "€"));
     } catch (GetException e) {
       Platform.runLater(() -> {
         amountLabel.setText("Erreur");

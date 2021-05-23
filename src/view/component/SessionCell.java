@@ -3,8 +3,6 @@ package view.component;
 import javafx.scene.control.ListCell;
 import model.Session;
 
-import java.time.format.DateTimeFormatter;
-
 
 public class SessionCell extends ListCell<Session> {
   

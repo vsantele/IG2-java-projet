@@ -20,14 +20,14 @@ import view.component.CharityCell;
 import java.util.ArrayList;
 
 public class PeoplePerActivityAndCharitySearch extends Stage {
-  private Scene scene;
-  private BorderPane pane;
-  private HBox top;
-  private ComboBox<Activity> activityPicker;
-  private ComboBox<Charity> charityPicker;
-  private Button submitBtn;
-  private TableView<Booking> center;
-  private BookingController controller;
+  private final Scene scene;
+  private final BorderPane pane;
+  private final HBox top;
+  private final ComboBox<Activity> activityPicker;
+  private final ComboBox<Charity> charityPicker;
+  private final Button submitBtn;
+  private final TableView<Booking> center;
+  private final BookingController controller;
   
   private Alert errorAlert;
   
@@ -52,9 +52,7 @@ public class PeoplePerActivityAndCharitySearch extends Stage {
       errorAlert.setContentText(e.getDetails());
       errorAlert.showAndWait();
     }
-    activityPicker.valueProperty().addListener(observable -> {
-      selectedActivity = activityPicker.getValue();
-    });
+    activityPicker.valueProperty().addListener(observable -> selectedActivity = activityPicker.getValue());
     
     charityPicker = new ComboBox<>();
     charityPicker.setButtonCell(new CharityCell());
@@ -68,9 +66,9 @@ public class PeoplePerActivityAndCharitySearch extends Stage {
       errorAlert.showAndWait();
     }
   
-    charityPicker.valueProperty().addListener(observable -> {
-      selectedCharity = charityPicker.getValue();
-    });
+    charityPicker.valueProperty().addListener(observable -> selectedCharity = charityPicker.getValue());
+  
+    center = new TableView<>();
     
     submitBtn = new Button("Rechercher");
     submitBtn.setOnAction(event -> {
@@ -83,8 +81,6 @@ public class PeoplePerActivityAndCharitySearch extends Stage {
           errorAlert.setContentText(e.getDetails());
           errorAlert.showAndWait();
         }
-      } else {
-        System.out.println("Champs manquant");
       }
     });
     
@@ -92,7 +88,6 @@ public class PeoplePerActivityAndCharitySearch extends Stage {
     pane.setPadding(new Insets(15, 12, 15, 12));
     pane.setTop(top);
     
-    center = new TableView<>();
     TableColumn<Booking, String> firstnameCol = new TableColumn<>("Prénom");
     firstnameCol.setCellValueFactory(new PropertyValueFactory<>("firstname"));
     

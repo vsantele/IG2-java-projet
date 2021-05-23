@@ -2,12 +2,10 @@ package thread;
 
 import controller.BookingController;
 import exception.data.GetException;
-import javafx.stage.Stage;
 import view.stage.Total;
 
 public class TotalThread extends Thread {
-  private Total stage;
-  private BookingController controller;
+  private final Total stage;
   private Boolean hasError;
   
   public TotalThread(Total stage, BookingController controller) {

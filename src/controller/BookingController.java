@@ -8,7 +8,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 
 public class BookingController {
-  private BookingManager bookingManager;
+  private final BookingManager bookingManager;
   
   public BookingController(BookingManager bookingManager) {
     this.bookingManager = bookingManager;

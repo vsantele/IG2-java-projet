@@ -33,39 +33,34 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class Form extends Stage{
-  private Scene scene;
-  private GridPane grid;
-  private BookingController controller;
-  
-  private ArrayList<Charity> charities;
-  private ArrayList<Activity> activities;
-  private ArrayList<Session> sessions;
-  private ArrayList<LocalDate> dates;
+  private final Scene scene;
+  private final GridPane grid;
+  private final BookingController controller;
   
   private Boolean isUpdate;
   private Booking booking;
 
-  private TextField firstnameTextField;
-  private TextField lastnameTextField;
-  private TextField phoneTextField;
-  private TextField emailTextField;
-  private DatePicker birthdatePicker;
-  private TextField amountTextField;
-  private RadioButton isPaidYes;
-  private String isPaidYesValue = "Oui";
-  private RadioButton isPaidNo;
-  private String isPaidNoValue = "Non";
-  private HBox isPaidBox;
-  private ToggleGroup isPaidGroup;
-  private ComboBox<Charity> charityPicker;
-  private ComboBox<Activity> activityPicker;
-  private ComboBox<Session> sessionPicker;
-  private ComboBox<LocalDate> datePicker;
-  private Button confirmBtn;
-  private Button cancelBtn;
+  private final TextField firstnameTextField;
+  private final TextField lastnameTextField;
+  private final TextField phoneTextField;
+  private final TextField emailTextField;
+  private final DatePicker birthdatePicker;
+  private final TextField amountTextField;
+  private final RadioButton isPaidYes;
+  private final String isPaidYesValue = "Oui";
+  private final RadioButton isPaidNo;
+  private final String isPaidNoValue = "Non";
+  private final HBox isPaidBox;
+  private final ToggleGroup isPaidGroup;
+  private final ComboBox<Charity> charityPicker;
+  private final ComboBox<Activity> activityPicker;
+  private final ComboBox<Session> sessionPicker;
+  private final ComboBox<LocalDate> datePicker;
+  private final Button confirmBtn;
+  private final Button cancelBtn;
   
-  private Alert infoAlert;
-  private Alert errorAlert;
+  private final Alert infoAlert;
+  private final Alert errorAlert;
 
   
   public Form(Stage primaryStage, BookingController controller) {
@@ -93,18 +88,22 @@ public class Form extends Stage{
     amountTextField = new TextField();
     amountTextField.setPromptText("10");
     amountTextField.setTextFormatter(new TextFormatter<>(new NumberStringConverter()));
-    isPaidYes = new RadioButton("Oui");
-    isPaidNo = new RadioButton("Non");
+    isPaidYes = new RadioButton(isPaidYesValue);
+    isPaidNo = new RadioButton(isPaidNoValue);
     isPaidGroup = new ToggleGroup();
     isPaidYes.setToggleGroup(isPaidGroup);
     isPaidYes.setSelected(true);
     isPaidNo.setToggleGroup(isPaidGroup);
     isPaidBox = new HBox(10, isPaidYes, isPaidNo);
     charityPicker = new ComboBox<>();
+    activityPicker = new ComboBox<>();
+    sessionPicker = new ComboBox<>();
+    datePicker = new ComboBox<>();
+    
     charityPicker.setButtonCell(new CharityCell());
     charityPicker.setCellFactory(listView -> new CharityCell());
     try {
-      charities = controller.getCharities();
+      ArrayList<Charity> charities = controller.getCharities();
       charityPicker.setItems(FXCollections.observableArrayList(charities));
     } catch (GetException e) {
       errorAlert.setHeaderText(e.getMessage());
@@ -112,10 +111,8 @@ public class Form extends Stage{
       errorAlert.showAndWait();
     }
   
-    activityPicker = new ComboBox<>();
-  
     try {
-      activities = controller.getActivities();
+      ArrayList<Activity> activities = controller.getActivities();
       activityPicker.setItems(FXCollections.observableArrayList(activities));
     } catch (GetException e) {
       errorAlert.setHeaderText(e.getMessage());
@@ -129,8 +126,8 @@ public class Form extends Stage{
       try {
         Activity selectedActivity = activityPicker.getValue();
         if (selectedActivity != null) {
-          
-          sessions = controller.getSessions(selectedActivity);
+  
+          ArrayList<Session> sessions = controller.getSessions(selectedActivity);
           sessionPicker.setItems(FXCollections.observableArrayList(sessions));
           sessionPicker.setDisable(false);
         } else {
@@ -147,7 +144,7 @@ public class Form extends Stage{
       }
     });
     
-    sessionPicker = new ComboBox<>();
+    
     sessionPicker.setButtonCell(new SessionCell());
     sessionPicker.setCellFactory(listView -> new SessionCell());
     sessionPicker.setDisable(true);
@@ -155,7 +152,7 @@ public class Form extends Stage{
       try {
         Session selectedSession = sessionPicker.getValue();
         if (selectedSession != null) {
-          dates = DateGenerator.getDates(sessionPicker.getValue());
+          ArrayList<LocalDate> dates = DateGenerator.getDates(sessionPicker.getValue());
           datePicker.setItems(FXCollections.observableArrayList(dates));
           datePicker.setDisable(false);
         } else {
@@ -167,16 +164,14 @@ public class Form extends Stage{
         errorAlert.showAndWait();
       }
     });
-    datePicker = new ComboBox<>();
+    
     datePicker.setButtonCell(new DateCell());
     datePicker.setCellFactory(listView -> new DateCell());
     datePicker.setDisable(true);
     confirmBtn = new Button("Confirmer");
     confirmBtn.setOnAction(new ConfirmHandler());
     cancelBtn = new Button("Annuler");
-    cancelBtn.setOnAction(event -> {
-      hide();
-    });
+    cancelBtn.setOnAction(event -> hide());
     
     grid.add(new Label("Prénom * "), 0,0);
     grid.add(firstnameTextField, 1,0);
@@ -333,7 +328,6 @@ public class Form extends Stage{
             errorAlert.setHeaderText(null);
             errorAlert.setContentText("Vous tentez de faire une mise à jour d'une réservation inexistante");
             errorAlert.showAndWait();
-            return;
           } else {
             booking.setFirstname(firstname);
             booking.setLastname(lastname);

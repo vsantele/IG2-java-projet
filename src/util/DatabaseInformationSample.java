@@ -1,16 +1,16 @@
 package util;
 
 public class DatabaseInformationSample {
-  private static String driver = "mariadb";
-  private static String host = "localhost";
-  private static int port = 3306;
-  private static String user = "root";
-  private static String password = "root";
-  private static String dbName = "booking";
-  private static Boolean useSSl = false;
+  private static final String driver = "mariadb";
+  private static final String host = "localhost";
+  private static final int port = 3306;
+  private static final String user = "root";
+  private static final String password = "root";
+  private static final String dbName = "booking";
+  private static final Boolean useSSl = false;
   
   public static String getUrl() {
-    return "jdbc:" + driver + "://address=(protocol=tcp)(host=" + host + ")(port=" + port +")/" + dbName + "?useSSl=" + useSSl.toString() ;
+    return "jdbc:" + driver + "://address=(protocol=tcp)(host=" + host + ")(port=" + port +")/" + dbName + "?useSSl=" + useSSl;
   }
   
   public static String getUser() {

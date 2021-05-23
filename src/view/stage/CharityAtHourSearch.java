@@ -18,25 +18,26 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 
 public class CharityAtHourSearch extends Stage {
-  private Scene scene;
-  private BorderPane pane;
-  private VBox top;
+  private final Scene scene;
+  private final BorderPane pane;
+  private final VBox top;
   
-  private DatePicker startDatePicker;
-  private DatePicker endDatePicker;
-  private ComboBox<Integer> hourPicker;
-  private ComboBox<Integer> minutePicker;
+  private final DatePicker startDatePicker;
+  private final DatePicker endDatePicker;
+  private final ComboBox<Integer> hourPicker;
+  private final ComboBox<Integer> minutePicker;
 
-  private Button submitBtn;
-  private TableView<Charity> center;
-  private BookingController controller;
+  private final Button submitBtn;
+  private final TableView<Charity> center;
+  private final BookingController controller;
   
-  private Alert errorAlert;
+  private final Alert errorAlert;
   
   public CharityAtHourSearch(Stage primaryStage, BookingController controller) {
     this.controller = controller;
     pane = new BorderPane();
     scene = new Scene(pane);
+    center = new TableView<>();
     
     errorAlert = new Alert(Alert.AlertType.ERROR);
     errorAlert.setTitle("Erreur");
@@ -105,7 +106,7 @@ public class CharityAtHourSearch extends Stage {
     top = new VBox(10, new HBox(10, new Label("Heure: "), hourPicker, new Label(":"), minutePicker), new HBox(new Label("Date de début: "), startDatePicker),new HBox( new Label("Date de fin: "), endDatePicker),new HBox( submitBtn));
     pane.setTop(top);
     
-    center = new TableView<>();
+    
     TableColumn<Charity, String> charityCol = new TableColumn<>("Association");
     charityCol.setCellValueFactory(new PropertyValueFactory<>("name"));
     TableColumn<Charity, String> contactCol = new TableColumn<>("Contact");
@@ -128,6 +129,5 @@ public class CharityAtHourSearch extends Stage {
   public void reset() {
     hourPicker.getSelectionModel().select(null);
     center.setItems(null);
-
   }
 }

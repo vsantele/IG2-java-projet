@@ -1,7 +1,7 @@
 package exception.data;
 
 public class GetException extends Exception{
-  private String details;
+  private final String details;
   
   public GetException(String details) {
     this.details = details;

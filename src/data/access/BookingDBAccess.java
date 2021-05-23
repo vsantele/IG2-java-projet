@@ -14,7 +14,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 
 public class BookingDBAccess implements BookingDataAccess {
-  private Connection connection;
+  private final Connection connection;
   
   public BookingDBAccess() {
     connection = MariadbConnection.getInstance();
@@ -135,7 +135,6 @@ public class BookingDBAccess implements BookingDataAccess {
       req.setDate(3, Utils.toSqlDate(end));
       
       ResultSet data = req.executeQuery();
-      ResultSetMetaData meta = data.getMetaData();
       while (data.next()) {
         Integer id = data.getInt("date_id");
         String type = data.getString("type");

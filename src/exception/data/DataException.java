@@ -1,8 +1,8 @@
 package exception.data;
 
 public abstract class DataException extends Exception{
-  private String operation;
-  private String details;
+  private final String operation;
+  private final String details;
   
   public DataException(String operation, String details) {
     this.operation = operation;
