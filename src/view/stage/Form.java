@@ -1,7 +1,7 @@
 package view.stage;
 
-import business.DateGenerator;
 import controller.BookingController;
+import exception.business.InvalidDatesException;
 import exception.data.*;
 import exception.model.InvalidBookingException;
 import javafx.collections.FXCollections;
@@ -86,7 +86,7 @@ public class Form extends Stage{
     emailTextField.setPromptText("john.doe@email.com");
     birthdatePicker = new DatePicker();
     amountTextField = new TextField();
-    amountTextField.setPromptText("10");
+    amountTextField.setPromptText("10,5");
     amountTextField.setTextFormatter(new TextFormatter<>(new NumberStringConverter()));
     isPaidYes = new RadioButton(isPaidYesValue);
     isPaidNo = new RadioButton(isPaidNoValue);
@@ -152,13 +152,17 @@ public class Form extends Stage{
       try {
         Session selectedSession = sessionPicker.getValue();
         if (selectedSession != null) {
-          ArrayList<LocalDate> dates = DateGenerator.getDates(sessionPicker.getValue());
+          ArrayList<LocalDate> dates = controller.getDates(sessionPicker.getValue());
           datePicker.setItems(FXCollections.observableArrayList(dates));
           datePicker.setDisable(false);
         } else {
           datePicker.setDisable(true);
         }
       } catch (GetException e) {
+        errorAlert.setHeaderText(e.getMessage());
+        errorAlert.setContentText(e.getDetails());
+        errorAlert.showAndWait();
+      }  catch (InvalidDatesException e) {
         errorAlert.setHeaderText(e.getMessage());
         errorAlert.setContentText(null);
         errorAlert.showAndWait();
@@ -278,7 +282,7 @@ public class Form extends Stage{
       try {
         if (amountTextField.getText() == null) amount = null;
         else {
-          amount = (Double) NumberFormat.getInstance().parse(amountTextField.getText());
+          amount = NumberFormat.getInstance().parse(amountTextField.getText()).doubleValue();
         }
       } catch (ParseException | ClassCastException e ) {
         errorAlert.setTitle("Montant non valide");
@@ -373,8 +377,8 @@ public class Form extends Stage{
         }
       } catch (InvalidBookingException e) {
         errorAlert.setTitle("Erreur");
-        errorAlert.setHeaderText(null);
-        errorAlert.setContentText(e.getMessage());
+        errorAlert.setHeaderText(e.getMessage());
+        errorAlert.setContentText(e.getDetails());
         errorAlert.show();
       }
       catch (UpdateBookingException | AddBookingException e) {

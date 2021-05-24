@@ -3,8 +3,8 @@ package model;
 import java.util.Objects;
 
 public class Activity {
-  private String code;
-  private String title;
+  private final String code;
+  private final String title;
   
   public Activity(String code, String label) {
     this.code = code;

@@ -34,11 +34,10 @@ public class Booking {
     setSession(session);
     setDate(date);
     
-//    if (getCharityCode() == null) throw new InvalidBookingException("association");
   }
 
   public Booking(Integer id,  String firstname, String lastname, Double amount, Boolean isPaid, String phone, LocalDate birthdate, String email, LocalDate date, String charityCode, Integer sessionId) throws InvalidBookingException {
-    this(id, firstname, lastname, amount, isPaid, phone, birthdate, email, date, (Charity) null,  (Session) null);
+    this(id, firstname, lastname, amount, isPaid, phone, birthdate, email, date, null,  (Session) null);
     this.setCharityCode(charityCode);
     this.setSessionId(sessionId);
   }
@@ -63,23 +62,23 @@ public class Booking {
   }
   
   public void setAmount(Double amount) throws InvalidBookingException {
-    if (amount == null || amount < 0) throw new InvalidBookingException("montant");
+    if (amount == null || amount < 0) throw new InvalidBookingException("montant","Veuillez choisir un montant positif");
     
     this.amount = amount;
   }
   
   public void setPaid(Boolean paid) throws InvalidBookingException {
-    if (paid == null) throw new InvalidBookingException("est payé");
+    if (paid == null) throw new InvalidBookingException("est payé", "Veuillez choisir oui ou non");
     isPaid = paid;
   }
   
   public void setPhone(String phone) throws InvalidBookingException {
-    if (phone == null || !Utils.isPhoneValid(phone)) throw new InvalidBookingException("téléphone");
+    if (phone == null || !Utils.isPhoneValid(phone)) throw new InvalidBookingException("téléphone", "Les formats accepter sont 0123/45.67.89 ou +12 345/67.89.01");
     this.phone = phone;
   }
   
   public void setBirthdate(LocalDate birthdate) throws InvalidBookingException {
-    if (birthdate != null && birthdate.isAfter(LocalDate.now())) throw new InvalidBookingException("date de naissance");
+    if (birthdate != null && birthdate.isAfter(LocalDate.now())) throw new InvalidBookingException("date de naissance", "Vérifiez que la date ne soit pas dans le futur");
     this.birthdate = birthdate;
   }
   

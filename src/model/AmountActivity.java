@@ -1,8 +1,8 @@
 package model;
 
 public class AmountActivity {
-  private Double amount;
-  private String activity;
+  private final Double amount;
+  private final String activity;
   
   public AmountActivity(Double amount, String activity) {
     this.amount = amount;

@@ -103,4 +103,8 @@ public class BookingManager {
   public Double getTotal() throws GetException {
     return dao.getTotal();
   }
+  
+  public ArrayList<Date> getDates(Session session, LocalDate start, LocalDate end) throws GetException {
+    return dao.getDates(session, start, end);
+  }
 }

@@ -9,7 +9,7 @@ import java.util.Locale;
 import java.util.Objects;
 
 public class Session {
-  private Integer id;
+  private final Integer id;
   private DayOfWeek numDay;
   private LocalTime startHour;
   private LocalTime endHour;

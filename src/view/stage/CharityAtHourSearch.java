@@ -111,9 +111,14 @@ public class CharityAtHourSearch extends Stage {
     charityCol.setCellValueFactory(new PropertyValueFactory<>("name"));
     TableColumn<Charity, String> contactCol = new TableColumn<>("Contact");
     contactCol.setCellValueFactory(new PropertyValueFactory<>("contact"));
+    TableColumn<Charity, String> addressCol = new TableColumn<>("Adresse");
+    addressCol.setCellValueFactory(new PropertyValueFactory<>("address"));
+    TableColumn<Charity, String> zipCodeCol = new TableColumn<>("Code Postal");
+    zipCodeCol.setCellValueFactory(new PropertyValueFactory<>("zipCode"));
+    TableColumn<Charity, String> countryCol = new TableColumn<>("Pays");
+    countryCol.setCellValueFactory(new PropertyValueFactory<>("country"));
     
-    center.getColumns().add(charityCol);
-    center.getColumns().add(contactCol);
+    center.getColumns().setAll(charityCol, contactCol, addressCol, zipCodeCol, countryCol);
     
     pane.setPadding(new Insets(15, 12, 15, 12));
     pane.setCenter(center);

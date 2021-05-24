@@ -140,7 +140,7 @@ public class BookingDBAccess implements BookingDataAccess {
         String type = data.getString("type");
         LocalDate date = data.getDate("date").toLocalDate();
         
-        Date entryDate = new Date(id, type, date, session);
+        Date entryDate = new Date(id, type, date);
         dates.add(entryDate);
       }
     } catch (SQLException e) {
@@ -330,6 +330,7 @@ public class BookingDBAccess implements BookingDataAccess {
         bookings.add(booking);
       }
     } catch (SQLException e) {
+      e.printStackTrace();
       throw new GetException();
     } catch (InvalidBookingException | SessionNumDayException e) {
       throw new GetException(e.getMessage());

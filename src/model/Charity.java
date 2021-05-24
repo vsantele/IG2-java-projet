@@ -3,7 +3,7 @@ package model;
 import java.util.Objects;
 
 public class Charity {
-  private String code;
+  private final String code;
   private String name;
   private String contact;
   private String address;

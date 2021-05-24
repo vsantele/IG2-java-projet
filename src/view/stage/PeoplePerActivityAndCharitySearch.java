@@ -2,6 +2,7 @@ package view.stage;
 
 import controller.BookingController;
 import exception.data.GetException;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -29,7 +30,7 @@ public class PeoplePerActivityAndCharitySearch extends Stage {
   private final TableView<Booking> center;
   private final BookingController controller;
   
-  private Alert errorAlert;
+  private final Alert errorAlert;
   
   private Activity selectedActivity;
   private Charity selectedCharity;
@@ -98,7 +99,10 @@ public class PeoplePerActivityAndCharitySearch extends Stage {
     birthdateCol.setCellValueFactory(new PropertyValueFactory<>("birthdate"));
   
     TableColumn<Booking, String> amountCol = new TableColumn<>("Montant");
-    amountCol.setCellValueFactory(new PropertyValueFactory<>("amount"));
+    amountCol.setCellValueFactory(cellData -> {
+      Double amount = cellData.getValue().getAmount();
+      return new SimpleStringProperty(String.format("%.2f", amount) + " €");
+    });
     
     center.getColumns().add(firstnameCol);
     center.getColumns().add(lastnameCol);

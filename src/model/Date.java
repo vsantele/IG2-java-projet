@@ -1,32 +1,25 @@
 package model;
 
 import java.time.LocalDate;
-import java.time.OffsetDateTime;
 
 public class Date {
   public static final String CUSTOM = "custom";
   public static final String CANCELED = "canceled";
 
-  private Integer id;
-  private String type;
-  private LocalDate date;
-  private Session session;
+  private final Integer id;
+  private final String type;
+  private final LocalDate date;
   
-  public Date(Integer id, String type, LocalDate date, model.Session session) {
+  public Date(Integer id, String type, LocalDate date) {
     this.id = id;
     this.type = type;
     this.date = date;
-    this.session = session;
   }
   
-  public Date(Integer id, String type, LocalDate date) {
-    this(id, type, date, null);
+  public Date(String type, LocalDate date) {
+    this(null, type, date);
   }
   
-  public Date(String type, LocalDate date,model.Session session) {
-    this(null, type, date, session);
-  }
-
   public LocalDate getDate() {
     return date;
   }
@@ -41,7 +34,6 @@ public class Date {
             "id=" + id +
             ", type='" + type + '\'' +
             ", date=" + date +
-            ", session=" + session +
             '}';
   }
 }

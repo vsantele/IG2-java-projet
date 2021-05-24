@@ -5,39 +5,42 @@ import exception.data.GetException;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import javafx.scene.text.Text;
 
 public class Total extends Stage {
   private final Scene scene;
   private final HBox pane;
-  private final Label amountLabel;
+  private final Text amountText;
   private final BookingController controller;
   
-  private Alert errorAlert;
+  private final Alert errorAlert;
   
   public Total(Stage primaryStage, BookingController controller) {
-    amountLabel = new Label("chargement...");
-    pane = new HBox(new Label("Montant total de l'évènement: "), amountLabel);
+    amountText = new Text("chargement...");
+    pane = new HBox(new Text("Montant total de l'évènement: "), amountText);
     scene = new Scene(pane);
     errorAlert = new Alert(Alert.AlertType.ERROR);
     
     this.controller = controller;
     this.initOwner(primaryStage);
-    this.setTitle("Association pour une heure et date");
+    this.setTitle("Montant total");
     this.setScene(scene);
     this.setHeight(100);
-    this.setWidth(250);
+    this.setWidth(300);
+    this.setX(1600);
+    this.setY(114);
+    this.setResizable(false);
   }
   
   public void update() throws GetException {
     try {
       Double total = controller.getTotal();
-      Platform.runLater(() -> amountLabel.setText(total + "€"));
+      Platform.runLater(() -> amountText.setText(String.format("%.2f", total) + "€"));
     } catch (GetException e) {
       Platform.runLater(() -> {
-        amountLabel.setText("Erreur");
+        amountText.setText("Erreur");
         errorAlert.setHeaderText(e.getMessage());
         errorAlert.setContentText(e.getDetails());
         errorAlert.showAndWait();
