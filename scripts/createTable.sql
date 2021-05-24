@@ -64,5 +64,5 @@ CREATE TABLE date
     session_id INTEGER NOT NULL,
     CONSTRAINT date_pk PRIMARY KEY (date_id),
     CONSTRAINT date_session_fk FOREIGN KEY (session_id) REFERENCES session(session_id),
-    CONSTRAINT date_type_ck CHECK (type = 'canceled' || type = 'custom')
+    CONSTRAINT date_type_ck CHECK (type = 'canceled' OR type = 'custom')
 );
