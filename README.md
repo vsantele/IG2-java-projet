@@ -1,9 +1,9 @@
 # Projet Java IG2 de Aude Lekeux et Victor Santelé
 ## Setup
-### Ajouter les jar JDBC 
-- SQLite : https://repo1.maven.org/maven2/org/xerial/sqlite-jdbc/3.34.0/sqlite-jdbc-3.34.0.jar
-- MySQL : https://dev.mysql.com/downloads/connector/j/ (choisir "Platform Independent")
+###Ajouter JavaFX
+- Allez dans "File" -> "Project Structure..."
+- Sous "Project Settings" à gauche, allez dans "Libraries"
+- Ajoutez une nouvelle "Project Library" et choisissez "Java"
+- Sélectionnez le dossier "lib/javafx-sdk-16/lib" situé dans le projet
+###Ajouter la configuration
 
-### Mysql
-créer le fichier `DatabaseInformation.java` dans le package `util` sur base du fichier `DatabaseInformationSample.java`
-en renommant la classe `DatabaseInformation` et en ajustant les informations.
