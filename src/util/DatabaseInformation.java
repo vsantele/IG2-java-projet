@@ -2,7 +2,6 @@ package util;
 
 public class DatabaseInformation {
   private static final String driver = "mysql";
-  //  private static String host = "2001:41d0:404:200::5960";
   private static final String host = "localhost";
   private static final int port = 3306;
   private static final String user = "root";
