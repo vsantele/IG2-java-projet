@@ -1,5 +1,9 @@
-
+DROP TABLE IF EXISTS booking;
+DROP TABLE IF EXISTS date;
+DROP TABLE IF EXISTS charity;
+DROP TABLE IF EXISTS session;
 DROP TABLE IF EXISTS activity;
+
 CREATE TABLE activity
 (
     activity_code VARCHAR(8),
@@ -7,7 +11,6 @@ CREATE TABLE activity
     CONSTRAINT activity_pk PRIMARY KEY (activity_code)
 );
 
-DROP TABLE IF EXISTS session;
 CREATE TABLE session
 (
     session_id INTEGER AUTO_INCREMENT,
@@ -23,7 +26,6 @@ CREATE TABLE session
     CONSTRAINT session_hour_ck CHECK (start_hour < end_hour)
 );
 
-DROP TABLE IF EXISTS charity;
 CREATE TABLE charity
 (
     charity_code VARCHAR(8),
@@ -33,10 +35,9 @@ CREATE TABLE charity
     city VARCHAR(64),
     country VARCHAR(64),
     zip_code VARCHAR(10),
-   CONSTRAINT charity_pk PRIMARY KEY (charity_code)
+    CONSTRAINT charity_pk PRIMARY KEY (charity_code)
 );
 
-DROP TABLE IF EXISTS booking;
 CREATE TABLE booking
 (
     booking_id INTEGER AUTO_INCREMENT,
@@ -55,7 +56,6 @@ CREATE TABLE booking
     CONSTRAINT booking_session_fk FOREIGN KEY (session_id) REFERENCES session(session_id)
 );
 
-DROP TABLE IF EXISTS date;
 CREATE TABLE date
 (
     date_id INTEGER AUTO_INCREMENT,
