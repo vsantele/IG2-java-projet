@@ -1,25 +1,20 @@
 package view.scene;
 
-import business.BookingManager;
-import business.DateGenerator;
 import controller.BookingController;
 import exception.data.DeleteBookingException;
 import exception.data.GetException;
-import javafx.application.Application;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import model.Booking;
-import thread.TotalThread;
 import view.stage.*;
 
 import java.time.LocalDate;
@@ -30,38 +25,29 @@ import java.util.Optional;
 
 public class MainScene extends Scene {
     
-    private BorderPane pane;
-    private HBox hBoxTop;
-    private TableView<Booking> center;
+    private final TableView<Booking> center;
     
-    private BookingController bookingController;
+    private final BookingController bookingController;
     
-    private Form form;
-    private AmountsPerActivitySearch amountsPerActivitySearch;
-    private PeoplePerActivityAndCharitySearch peoplePerActivityAndCharitySearch;
-    private CharityAtHourSearch charityAtHourSearch;
+    private final Form form;
+    private final AmountsPerActivitySearch amountsPerActivitySearch;
+    private final PeoplePerActivityAndCharitySearch peoplePerActivityAndCharitySearch;
+    private final CharityAtHourSearch charityAtHourSearch;
     
-    private TotalThread totalThread;
+    private final Alert choiceAlert;
+    private final Alert confirmAlert;
+    private final Alert errorAlert;
+    private final Alert infoAlert;
     
-    private Button addBtn;
-    private Button amountsPerActivitySearchBtn;
-    private Button peoplePerActivityAndCharitySearchBtn;
-    private Button charityAtHourSearchBtn;
-    
-    private Alert choiceAlert;
-    private Alert confirmAlert;
-    private Alert errorAlert;
-    private Alert infoAlert;
-    
-    private ButtonType editBtn;
-    private ButtonType deleteBtn;
-    private ButtonType cancelBtn;
-    private ButtonType yesBtn;
-    private ButtonType noBtn;
+    private final ButtonType editBtn;
+    private final ButtonType deleteBtn;
+    private final ButtonType cancelBtn;
+    private final ButtonType yesBtn;
+    private final ButtonType noBtn;
     
     public MainScene(Stage primaryStage, BookingController bookingController) {
         super(new BorderPane());
-        pane = (BorderPane) this.getRoot();
+        BorderPane pane = (BorderPane) this.getRoot();
         this.bookingController = bookingController;
     
         form = new Form(primaryStage, bookingController);
@@ -98,7 +84,7 @@ public class MainScene extends Scene {
         primaryStage.setWidth(1300);
         primaryStage.setHeight(700);
     
-        addBtn = new Button("Ajouter Réservation");
+        Button addBtn = new Button("Ajouter Réservation");
         addBtn.setOnAction(event -> {
             form.setUpdate(false);
             form.setBooking(null);
@@ -106,26 +92,35 @@ public class MainScene extends Scene {
             getBookings();
         
         });
-        amountsPerActivitySearchBtn = new Button("Recettes par activité");
+        Button amountsPerActivitySearchBtn = new Button("Recettes par activité");
         amountsPerActivitySearchBtn.setOnAction(event -> {
             amountsPerActivitySearch.reset();
             amountsPerActivitySearch.show();
         });
-        peoplePerActivityAndCharitySearchBtn = new Button("Réservation pour activité et Association");
+        Button peoplePerActivityAndCharitySearchBtn = new Button("Réservation pour activité et Association");
         peoplePerActivityAndCharitySearchBtn.setOnAction(event -> {
             peoplePerActivityAndCharitySearch.reset();
             peoplePerActivityAndCharitySearch.show();
         });
-        charityAtHourSearchBtn = new Button("Association pour une heure et date");
+        Button charityAtHourSearchBtn = new Button("Association pour une heure et date");
         charityAtHourSearchBtn.setOnAction(event -> {
             charityAtHourSearch.reset();
             charityAtHourSearch.show();
         });
-        hBoxTop = new HBox(30, addBtn, amountsPerActivitySearchBtn, peoplePerActivityAndCharitySearchBtn, charityAtHourSearchBtn);
-        hBoxTop.setPadding(new Insets(15, 12, 15, 12));
-        hBoxTop.setStyle("-fx-background-color: #336699;");
-        pane.setTop(hBoxTop);
+        HBox top = new HBox(30, addBtn, amountsPerActivitySearchBtn, peoplePerActivityAndCharitySearchBtn, charityAtHourSearchBtn);
+        top.setPadding(new Insets(15, 12, 15, 12));
+        top.setStyle("-fx-background-color: #336699;");
+        pane.setTop(top);
     
+        Text bottomTitle = new Text("Mode d'emploi:");
+        Text bottomLine1 = new Text("Pour éditer ou supprimer une ligne: double cliquez dessus");
+        Text bottomLine2 = new Text("Vous ne pouvez pas éditer une réservation déjà passé");
+        Text bottomLine3 = new Text("Les réservations sont classés dans l'odre suivant: date décroissante, titre de l'activité, jour de la semaine, heure de début, nom de famille, prénom");
+        VBox bottom = new VBox(10, bottomTitle, bottomLine1, bottomLine2, bottomLine3);
+        bottom.setPadding(new Insets(15, 12, 15, 12));
+        bottom.setStyle("-fx-background-color: #dddddd;");
+        pane.setBottom(bottom);
+        
         center = new TableView<>();
     
         center.setRowFactory(tv -> {
@@ -147,6 +142,8 @@ public class MainScene extends Scene {
                                 center.refresh();
                             } else if (choice.get() == deleteBtn) {
                                 try {
+                                    confirmAlert.setHeaderText("Êtes-vous sûr de vouloir supprimer cette réservation?");
+                                    confirmAlert.setContentText("Cette action est irréversible");
                                     Optional<ButtonType> confirm = confirmAlert.showAndWait();
                                     if (confirm.isPresent()) {
                                         if (confirm.get() == yesBtn) {

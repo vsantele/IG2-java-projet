@@ -23,14 +23,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class PeoplePerActivityAndCharitySearch extends Stage {
-  private final Scene scene;
-  private final BorderPane pane;
-  private final HBox top;
   private final ComboBox<Activity> activityPicker;
   private final ComboBox<Charity> charityPicker;
-  private final Button submitBtn;
   private final TableView<Booking> center;
-  private final BookingController controller;
   
   private final Alert errorAlert;
   
@@ -38,9 +33,8 @@ public class PeoplePerActivityAndCharitySearch extends Stage {
   private Charity selectedCharity;
   
   public PeoplePerActivityAndCharitySearch(Stage primaryStage, BookingController controller) {
-    this.controller = controller;
-    pane = new BorderPane();
-    scene = new Scene(pane);
+    BorderPane pane = new BorderPane();
+    Scene scene = new Scene(pane);
     errorAlert = new Alert(Alert.AlertType.ERROR);
   
     activityPicker = new ComboBox<>();
@@ -71,8 +65,8 @@ public class PeoplePerActivityAndCharitySearch extends Stage {
     charityPicker.valueProperty().addListener(observable -> selectedCharity = charityPicker.getValue());
   
     center = new TableView<>();
-    
-    submitBtn = new Button("Rechercher");
+  
+    Button submitBtn = new Button("Rechercher");
     submitBtn.setOnAction(event -> {
       if (selectedActivity != null && selectedCharity != null) {
         try {
@@ -85,9 +79,9 @@ public class PeoplePerActivityAndCharitySearch extends Stage {
         }
       }
     });
-    
-    top = new HBox(10, new Label("Activté: "), activityPicker, new Label("Associations: "), charityPicker, submitBtn);
-    pane.setPadding(new Insets(15, 12, 15, 12));
+  
+    HBox top = new HBox(10, new Label("Activté: "), activityPicker, new Label("Associations: "), charityPicker, submitBtn);
+    top.setPadding(new Insets(15, 12, 15, 12));
     pane.setTop(top);
     
     TableColumn<Booking, String> firstnameCol = new TableColumn<>("Prénom");

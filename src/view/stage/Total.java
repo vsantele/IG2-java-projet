@@ -10,8 +10,6 @@ import javafx.stage.Stage;
 import javafx.scene.text.Text;
 
 public class Total extends Stage {
-  private final Scene scene;
-  private final HBox pane;
   private final Text amountText;
   private final BookingController controller;
   
@@ -19,8 +17,8 @@ public class Total extends Stage {
   
   public Total(Stage primaryStage, BookingController controller) {
     amountText = new Text("chargement...");
-    pane = new HBox(new Text("Montant total de l'évènement: "), amountText);
-    scene = new Scene(pane);
+    HBox pane = new HBox(new Text("Montant total de l'évènement: "), amountText);
+    Scene scene = new Scene(pane);
     errorAlert = new Alert(Alert.AlertType.ERROR);
     
     this.controller = controller;

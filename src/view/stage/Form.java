@@ -33,8 +33,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class Form extends Stage{
-  private final Scene scene;
-  private final GridPane grid;
   private final BookingController controller;
   
   private Boolean isUpdate;
@@ -50,14 +48,11 @@ public class Form extends Stage{
   private final String isPaidYesValue = "Oui";
   private final RadioButton isPaidNo;
   private final String isPaidNoValue = "Non";
-  private final HBox isPaidBox;
   private final ToggleGroup isPaidGroup;
   private final ComboBox<Charity> charityPicker;
   private final ComboBox<Activity> activityPicker;
   private final ComboBox<Session> sessionPicker;
   private final ComboBox<LocalDate> datePicker;
-  private final Button confirmBtn;
-  private final Button cancelBtn;
   
   private final Alert infoAlert;
   private final Alert errorAlert;
@@ -65,11 +60,11 @@ public class Form extends Stage{
   
   public Form(Stage primaryStage, BookingController controller) {
     this.controller = controller;
-    grid = new GridPane();
+    GridPane grid = new GridPane();
     grid.setVgap(10.0);
     grid.setHgap(5.0);
     grid.setPadding(new Insets(0, 10, 0, 10));
-    scene = new Scene(grid);
+    Scene scene = new Scene(grid);
   
     infoAlert = new Alert(Alert.AlertType.INFORMATION);
     errorAlert = new Alert(Alert.AlertType.ERROR);
@@ -94,7 +89,7 @@ public class Form extends Stage{
     isPaidYes.setToggleGroup(isPaidGroup);
     isPaidYes.setSelected(true);
     isPaidNo.setToggleGroup(isPaidGroup);
-    isPaidBox = new HBox(10, isPaidYes, isPaidNo);
+    HBox isPaidBox = new HBox(10, isPaidYes, isPaidNo);
     charityPicker = new ComboBox<>();
     activityPicker = new ComboBox<>();
     sessionPicker = new ComboBox<>();
@@ -172,9 +167,9 @@ public class Form extends Stage{
     datePicker.setButtonCell(new DateCell());
     datePicker.setCellFactory(listView -> new DateCell());
     datePicker.setDisable(true);
-    confirmBtn = new Button("Confirmer");
+    Button confirmBtn = new Button("Confirmer");
     confirmBtn.setOnAction(new ConfirmHandler());
-    cancelBtn = new Button("Annuler");
+    Button cancelBtn = new Button("Annuler");
     cancelBtn.setOnAction(event -> hide());
     
     grid.add(new Label("Prénom * "), 0,0);

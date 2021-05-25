@@ -18,25 +18,19 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 
 public class CharityAtHourSearch extends Stage {
-  private final Scene scene;
-  private final BorderPane pane;
-  private final VBox top;
   
   private final DatePicker startDatePicker;
   private final DatePicker endDatePicker;
   private final ComboBox<Integer> hourPicker;
   private final ComboBox<Integer> minutePicker;
-
-  private final Button submitBtn;
+  
   private final TableView<Charity> center;
-  private final BookingController controller;
   
   private final Alert errorAlert;
   
   public CharityAtHourSearch(Stage primaryStage, BookingController controller) {
-    this.controller = controller;
-    pane = new BorderPane();
-    scene = new Scene(pane);
+    BorderPane pane = new BorderPane();
+    Scene scene = new Scene(pane);
     center = new TableView<>();
     
     errorAlert = new Alert(Alert.AlertType.ERROR);
@@ -60,8 +54,8 @@ public class CharityAtHourSearch extends Stage {
     startDatePicker = new DatePicker();
     
     endDatePicker = new DatePicker();
-    
-    submitBtn = new Button("Rechercher");
+  
+    Button submitBtn = new Button("Rechercher");
     submitBtn.setOnAction(event -> {
       if (hourPicker.getValue() == null) {
         errorAlert.setHeaderText("Heure non valide");
@@ -101,8 +95,9 @@ public class CharityAtHourSearch extends Stage {
       }
       
     });
-    
-    top = new VBox(10, new HBox(10, new Label("Heure: "), hourPicker, new Label(":"), minutePicker), new HBox(new Label("Date de début: "), startDatePicker),new HBox( new Label("Date de fin: "), endDatePicker),new HBox( submitBtn));
+  
+    VBox top = new VBox(10, new HBox(10, new Label("Heure: "), hourPicker, new Label(":"), minutePicker), new HBox(new Label("Date de début: "), startDatePicker), new HBox(new Label("Date de fin: "), endDatePicker), new HBox(submitBtn));
+    top.setPadding(new Insets(15, 12, 15, 12));
     pane.setTop(top);
     
     
@@ -119,7 +114,6 @@ public class CharityAtHourSearch extends Stage {
     
     center.getColumns().setAll(charityCol, contactCol, addressCol, zipCodeCol, countryCol);
     
-    pane.setPadding(new Insets(15, 12, 15, 12));
     pane.setCenter(center);
     
     this.initModality(Modality.APPLICATION_MODAL);
