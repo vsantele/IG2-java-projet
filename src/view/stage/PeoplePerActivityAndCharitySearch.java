@@ -18,6 +18,8 @@ import model.Charity;
 import view.component.ActivityCell;
 import view.component.CharityCell;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class PeoplePerActivityAndCharitySearch extends Stage {
@@ -40,7 +42,6 @@ public class PeoplePerActivityAndCharitySearch extends Stage {
     pane = new BorderPane();
     scene = new Scene(pane);
     errorAlert = new Alert(Alert.AlertType.ERROR);
-//    errorAlert.setTitle("Erreur");
   
     activityPicker = new ComboBox<>();
     activityPicker.setButtonCell(new ActivityCell());
@@ -96,7 +97,11 @@ public class PeoplePerActivityAndCharitySearch extends Stage {
     lastnameCol.setCellValueFactory(new PropertyValueFactory<>("lastname"));
   
     TableColumn<Booking, String> birthdateCol = new TableColumn<>("Date de Naissance");
-    birthdateCol.setCellValueFactory(new PropertyValueFactory<>("birthdate"));
+    birthdateCol.setCellValueFactory(cellData -> {
+      LocalDate date = cellData.getValue().getBirthdate();
+      DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd LLLL yyyy");
+      return new SimpleStringProperty(date.format(formatter));
+    });
   
     TableColumn<Booking, String> amountCol = new TableColumn<>("Montant");
     amountCol.setCellValueFactory(cellData -> {

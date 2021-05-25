@@ -40,7 +40,6 @@ public class CharityAtHourSearch extends Stage {
     center = new TableView<>();
     
     errorAlert = new Alert(Alert.AlertType.ERROR);
-    errorAlert.setTitle("Erreur");
   
     hourPicker = new ComboBox<>();
     ArrayList<Integer> hours = new ArrayList<>();

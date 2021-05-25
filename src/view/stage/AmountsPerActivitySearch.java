@@ -37,7 +37,6 @@ public class AmountsPerActivitySearch extends Stage {
     center = new TableView<>();
     
     errorAlert = new Alert(Alert.AlertType.ERROR);
-    errorAlert.setTitle("Erreur");
   
     charityPicker = new ComboBox<>();
     charityPicker.setButtonCell(new CharityCell());

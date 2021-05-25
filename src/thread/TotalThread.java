@@ -8,7 +8,7 @@ public class TotalThread extends Thread {
   private final Total stage;
   private Boolean hasError;
   
-  public TotalThread(Total stage, BookingController controller) {
+  public TotalThread(Total stage) {
     super("total");
     this.stage = stage;
     hasError = false;
