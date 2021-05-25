@@ -80,7 +80,7 @@ public class PeoplePerActivityAndCharitySearch extends Stage {
       }
     });
   
-    HBox top = new HBox(10, new Label("Activté: "), activityPicker, new Label("Associations: "), charityPicker, submitBtn);
+    HBox top = new HBox(10, new Label("Activité: "), activityPicker, new Label("Association: "), charityPicker, submitBtn);
     top.setPadding(new Insets(15, 12, 15, 12));
     pane.setTop(top);
     
@@ -113,7 +113,7 @@ public class PeoplePerActivityAndCharitySearch extends Stage {
     
     this.initModality(Modality.APPLICATION_MODAL);
     this.initOwner(primaryStage);
-    this.setTitle("Réservation pour activité et Association");
+    this.setTitle("Réservation pour Activité et Association");
     this.setScene(scene);
     this.setWidth(650);
     this.setHeight(300);
