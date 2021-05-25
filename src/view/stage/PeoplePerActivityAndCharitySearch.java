@@ -93,6 +93,9 @@ public class PeoplePerActivityAndCharitySearch extends Stage {
     TableColumn<Booking, String> birthdateCol = new TableColumn<>("Date de Naissance");
     birthdateCol.setCellValueFactory(cellData -> {
       LocalDate date = cellData.getValue().getBirthdate();
+      if (date == null) {
+        return new SimpleStringProperty("");
+      }
       DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd LLLL yyyy");
       return new SimpleStringProperty(date.format(formatter));
     });
