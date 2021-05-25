@@ -120,4 +120,10 @@ public class PeoplePerActivityAndCharitySearch extends Stage {
     this.setHeight(300);
     
   }
+  
+  public void reset() {
+    activityPicker.getSelectionModel().select(null);
+    charityPicker.getSelectionModel().select(null);
+    center.setItems(null);
+  }
 }

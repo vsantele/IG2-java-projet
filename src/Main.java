@@ -121,15 +121,17 @@ public class Main extends Application {
     });
     amountsPerActivitySearchBtn = new Button("Recettes par activité");
     amountsPerActivitySearchBtn.setOnAction(event -> {
-      amountsPerActivitySearch.update();
+      amountsPerActivitySearch.reset();
       amountsPerActivitySearch.show();
     });
     peoplePerActivityAndCharitySearchBtn = new Button("Réservation pour activité et Association");
     peoplePerActivityAndCharitySearchBtn.setOnAction(event -> {
+      peoplePerActivityAndCharitySearch.reset();
       peoplePerActivityAndCharitySearch.show();
     });
     charityAtHourSearchBtn = new Button("Association pour une heure et date");
     charityAtHourSearchBtn.setOnAction(event -> {
+      charityAtHourSearch.reset();
       charityAtHourSearch.show();
     });
     hBoxTop = new HBox(30, addBtn, amountsPerActivitySearchBtn, peoplePerActivityAndCharitySearchBtn, charityAtHourSearchBtn);

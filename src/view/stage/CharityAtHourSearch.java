@@ -133,6 +133,9 @@ public class CharityAtHourSearch extends Stage {
 
   public void reset() {
     hourPicker.getSelectionModel().select(null);
+    minutePicker.getSelectionModel().select(null);
+    startDatePicker.setValue(null);
+    endDatePicker.setValue(null);
     center.setItems(null);
   }
 }

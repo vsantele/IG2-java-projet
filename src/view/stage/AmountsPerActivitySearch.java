@@ -93,7 +93,7 @@ public class AmountsPerActivitySearch extends Stage {
     this.setHeight(500);
   }
 
-  public void update() {
+  public void reset() {
     charityPicker.getSelectionModel().select(null);
     center.setItems(null);
   }
