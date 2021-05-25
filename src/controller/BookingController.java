@@ -86,8 +86,7 @@ public class BookingController {
   }
   
   public ArrayList<LocalDate> getDates(Session session) throws GetException, InvalidDatesException {
-//    LocalDate start = LocalDate.now();
-    LocalDate start = LocalDate.of(2021,6,5);
+    LocalDate start = LocalDate.now();
     return getDates(session, start);
   }
   

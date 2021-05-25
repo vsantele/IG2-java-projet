@@ -41,7 +41,6 @@ public class CharityAtHourSearch extends Stage {
       hours.add(hour);
     }
     hourPicker.setItems(FXCollections.observableArrayList(hours));
-    hourPicker.getSelectionModel().select(16);
   
     minutePicker = new ComboBox<>();
     ArrayList<Integer> minutes = new ArrayList<>();
@@ -49,7 +48,6 @@ public class CharityAtHourSearch extends Stage {
       minutes.add(minute);
     }
     minutePicker.setItems(FXCollections.observableArrayList(minutes));
-    minutePicker.getSelectionModel().select(0);
     
     startDatePicker = new DatePicker();
     
