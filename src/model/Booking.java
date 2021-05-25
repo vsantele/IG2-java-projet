@@ -73,7 +73,7 @@ public class Booking {
   }
   
   public void setPhone(String phone) throws InvalidBookingException {
-    if (phone == null || !Utils.isPhoneValid(phone)) throw new InvalidBookingException("téléphone", "Les formats accepter sont 0123/45.67.89 ou +12 345/67.89.01");
+    if (phone == null || !Utils.isPhoneValid(phone)) throw new InvalidBookingException("téléphone", "Les formats acceptés sont 0123/45.67.89 et +12 345/67.89.01");
     this.phone = phone;
   }
   
