@@ -1,6 +1,5 @@
 package thread;
 
-import controller.BookingController;
 import exception.data.GetException;
 import view.stage.Total;
 

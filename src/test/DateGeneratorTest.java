@@ -1,6 +1,5 @@
 package test;
 
-import business.BookingManager;
 import business.DateGenerator;
 import exception.business.InvalidDatesException;
 import model.Date;
