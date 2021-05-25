@@ -1,6 +1,6 @@
 package data.access;
 
-import data.connection.MariadbConnection;
+import data.connection.MySQLConnection;
 import exception.SessionNumDayException;
 import exception.data.*;
 import exception.model.InvalidBookingException;
@@ -17,7 +17,7 @@ public class BookingDBAccess implements BookingDataAccess {
   private final Connection connection;
   
   public BookingDBAccess() {
-    connection = MariadbConnection.getInstance();
+    connection = MySQLConnection.getInstance();
   }
   
   public int addBooking(Booking booking) throws AddBookingException {
