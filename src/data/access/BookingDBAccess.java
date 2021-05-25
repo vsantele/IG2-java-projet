@@ -108,7 +108,7 @@ public class BookingDBAccess implements BookingDataAccess {
   }
   
   public int deleteBooking(Booking booking) throws DeleteBookingException {
-    String sql = "DELETE FROM booking WHERE booking_id = ?";
+    String sql = "DELETE FROM booking WHERE booking_id = ?;";
   
     try {
       PreparedStatement req = connection.prepareStatement(sql);
@@ -125,7 +125,7 @@ public class BookingDBAccess implements BookingDataAccess {
     String sql = "SELECT date_id, date, type " +
             "FROM date " +
             "WHERE session_id = ? " +
-            "AND date BETWEEN ? AND ?";
+            "AND date BETWEEN ? AND ?;";
     
     try {
       PreparedStatement req = connection.prepareStatement(sql);
@@ -197,7 +197,7 @@ public class BookingDBAccess implements BookingDataAccess {
     ArrayList<Session> sessions = new ArrayList<>();
     String sql = "SELECT session_id, num_day, start_hour, end_hour, is_weekly, nb_max " +
             "FROM session " +
-            "WHERE activity_code = ?";
+            "WHERE activity_code = ?;";
   
     try {
       PreparedStatement req = connection.prepareStatement(sql);
@@ -388,28 +388,39 @@ public class BookingDBAccess implements BookingDataAccess {
   }
   
   public Boolean isSessionFull(Session session, LocalDate date) throws GetException {
-    String sql = "SELECT count(*) as count, s.nb_max FROM booking b JOIN session s ON b.session_id = s.session_id  WHERE b.session_id = ? AND b.date = ?";
+    String sqlCount = "SELECT count(*) as count FROM booking WHERE session_id = ? and date = ?;";
+    String sqlNbMax = "SELECT nb_max FROM session s WHERE session_id = ?;";
     
-    Boolean isFull = null;
+    Integer count = null;
+    Integer nbMax = null;
   
     try {
-      PreparedStatement req = connection.prepareStatement(sql);
+      PreparedStatement reqCount = connection.prepareStatement(sqlCount);
+  
+      reqCount.setInt(1, session.getId());
+      reqCount.setDate(2,Utils.toSqlDate(date));
       
-      req.setInt(1, session.getId());
-      req.setDate(2,Utils.toSqlDate(date));
+      ResultSet dataCount = reqCount.executeQuery();
       
-      ResultSet data = req.executeQuery();
+      while (dataCount.next()) {
+        count = dataCount.getInt("count");
+      }
       
-      while (data.next()) {
-        Integer count = data.getInt("count");
-        Integer nbMax = data.getInt("nb_max");
-        
-        isFull = count >= nbMax;
+      PreparedStatement reqNbMax = connection.prepareStatement(sqlNbMax);
+      reqNbMax.setInt(1, session.getId());
+      
+      ResultSet dataNbMax = reqNbMax.executeQuery();
+      
+      while (dataNbMax.next()) {
+        nbMax = dataNbMax.getInt("nb_max");
       }
     } catch (SQLException e) {
       throw new GetException();
     }
-    return isFull;
+    if (nbMax == null || count == null || nbMax == 0) {
+      throw new GetException();
+    }
+    return count >= nbMax;
   }
   
   @Override
